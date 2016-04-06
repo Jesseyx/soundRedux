@@ -1,7 +1,20 @@
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import Test from '../components/Test';
+import NavContainer from './NavContainer';
 
+const propTypes = {
+
+}
+
+class App extends Component {
+  render() {
+    return (
+      <NavContainer />
+    )
+  }
+}
+
+App.propTypes = propTypes;
 
 function mapStateToProps(props, ownProps) {
   return {
@@ -15,4 +28,4 @@ function mapDispatchToProps(dispatch, ownProps) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Test);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
