@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import NavContainer from './NavContainer';
+import SongsContainer from './SongsContainer';
 
 const propTypes = {
 
@@ -9,7 +10,10 @@ const propTypes = {
 class App extends Component {
   render() {
     return (
-      <NavContainer />
+      <div>
+        <NavContainer />
+        <SongsContainer />
+      </div>
     )
   }
 }
