@@ -1,18 +1,32 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Songs from '../components/Songs';
+import MobileSongs from '../components/MobileSongs';
+
+const propTypes = {
+  isMobile: PropTypes.bool
+}
 
 class SongsContainer extends Component {
   render() {
-    return (
-      <Songs />
-    )
+    const { isMobile } = this.props;
+
+    if (isMobile) {
+      return <MobileSongs { ...this.props } />
+    }
+
+    return <Songs { ...this.props } />
   }
 }
 
-function mapStateToProps(state, ownProps) {
-  return {
+SongsContainer.propTypes = propTypes;
 
+function mapStateToProps(state, ownProps) {
+  const { environment } = state;
+  const { isMobile } = environment;
+
+  return {
+    isMobile
   }
 }
 

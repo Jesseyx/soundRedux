@@ -21,6 +21,17 @@ class App extends Component {
   }
 
   render() {
+    const { isMobile, height, width } = this.props;
+
+    if (isMobile) {
+      return (
+        <div className="mobile" style={{ height: `${ height }px`, width: `${ width }px` }}>
+          <SongsContainer />
+          <NavContainer />
+        </div>
+      )
+    }
+
     return (
       <div>
         <NavContainer />
