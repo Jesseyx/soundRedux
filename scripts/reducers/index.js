@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import test from './test';
+import environment from './environment';
 
 const rootReducer = combineReducers({
-  test
+  environment
 })
 
 export default rootReducer;

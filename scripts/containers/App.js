@@ -1,13 +1,25 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+
+import { initEnvironment } from '../actions/environment';
+
 import NavContainer from './NavContainer';
 import SongsContainer from './SongsContainer';
 
 const propTypes = {
-
+  dispatch: PropTypes.func.isRequired,
+  isMobile: PropTypes.bool,
+  height: PropTypes.number,
+  width: PropTypes.number
 }
 
 class App extends Component {
+  componentDidMount() {
+    // 组件开始装载前
+    const { dispatch } = this.props;
+    dispatch(initEnvironment());
+  }
+
   render() {
     return (
       <div>
@@ -20,16 +32,14 @@ class App extends Component {
 
 App.propTypes = propTypes;
 
-function mapStateToProps(props, ownProps) {
+function mapStateToProps(state, ownProps) {
+  const { environment } = state;
+  const { isMobile, height, width } = environment;
   return {
-
+    isMobile,
+    height,
+    width
   }
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
-  return {
-
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps)(App);

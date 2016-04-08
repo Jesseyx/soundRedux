@@ -1,0 +1,7 @@
+{
+  environment: {
+    isMobile: false,
+    height: null,
+    width: null
+  }
+}
