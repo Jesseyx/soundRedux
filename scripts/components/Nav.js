@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import Popover from './Popover';
 
 const propTypes = {
 
@@ -7,6 +8,33 @@ const propTypes = {
 class Nav extends Component {
   constructor(props) {
     super(props);
+  }
+
+  renderNavUser() {
+    const { authed } = this.props;
+
+    if (authed.user) {
+      return (
+        <h1>哈哈哈</h1>
+      )
+    }
+
+    return (
+      <Popover className="nav-user">
+        <div className="nav-user-link">
+          <i className="icon ion-person"></i>
+          <i className="icon ion-chevron-down"></i>
+          <i className="icon ion-chevron-up"></i>
+        </div>
+        <div className="nav-user-popover popover-content">
+          <ul className="nav-user-popover-list">
+            <li className="nav-user-popover-item">
+              <a className="button orange block">Sign into SoundCloud</a>
+            </li>
+          </ul>
+        </div>
+      </Popover>
+    )
   }
 
   render() {
@@ -32,13 +60,7 @@ class Nav extends Component {
               </div>
             </div>
             <div className="nav-nav-item">
-              <div className="nav-user popover">
-                <div className="nav-user-link">
-                  <i className="icon ion-person"></i>
-                  <i className="icon ion-chevron-down"></i>
-                  <i className="icon ion-chevron-up"></i>
-                </div>
-              </div>
+              { this.renderNavUser() }
             </div>
           </div>
         </div>
