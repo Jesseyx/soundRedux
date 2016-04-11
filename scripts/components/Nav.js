@@ -2,7 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import Popover from './Popover';
 
 const propTypes = {
-
+  dispatch: PropTypes.func.isRequired,
+  authed: PropTypes.object.isRequired
 }
 
 class Nav extends Component {
@@ -15,7 +16,20 @@ class Nav extends Component {
 
     if (authed.user) {
       return (
-        <h1>哈哈哈</h1>
+        <Popover className="nav-user">
+          <div className="nav-user-link">
+            <img className="nav-authed-image" src="https://i1.sndcdn.com/avatars-000217074860-ujilem-large.jpg" />
+            <i className="icon ion-chevron-down"></i>
+            <i className="icon ion-chevron-up"></i>
+          </div>
+          <div className="nav-user-popover popover-content">
+            <ul className="nav-user-popover-list">
+              <li className="nav-user-popover-item">
+                <a href="">Log Out</a>
+              </li>
+            </ul>
+          </div>
+        </Popover>
       )
     }
 

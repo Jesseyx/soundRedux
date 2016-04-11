@@ -1,4 +1,7 @@
 {
+  authed: {
+
+  },
   environment: {
     isMobile: false,
     height: null,
