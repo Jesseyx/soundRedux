@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { loginUser } from '../actions/authed';
 import Popover from './Popover';
 
 const propTypes = {
@@ -9,6 +10,18 @@ const propTypes = {
 class Nav extends Component {
   constructor(props) {
     super(props);
+    this.login = this.login.bind(this);
+    this.logout = this.logout.bind(this);
+  }
+
+  login(e) {
+    e.preventDefault();
+    const { dispatch } = this.props;
+    dispatch(loginUser());
+  }
+
+  logout(e) {
+
   }
 
   renderNavUser() {
@@ -25,7 +38,7 @@ class Nav extends Component {
           <div className="nav-user-popover popover-content">
             <ul className="nav-user-popover-list">
               <li className="nav-user-popover-item">
-                <a href="">Log Out</a>
+                <a href="#" onClick={ this.logout }>Log Out</a>
               </li>
             </ul>
           </div>
@@ -43,7 +56,7 @@ class Nav extends Component {
         <div className="nav-user-popover popover-content">
           <ul className="nav-user-popover-list">
             <li className="nav-user-popover-item">
-              <a className="button orange block">Sign into SoundCloud</a>
+              <a className="button orange block" href="#" onClick={ this.login }>Sign into SoundCloud</a>
             </li>
           </ul>
         </div>

@@ -1,7 +1,7 @@
 const initialState = {
-  user: {
-    
-  }
+  // user: {
+  //
+  // }
 }
 
 export default function authed(state = initialState, action) {
