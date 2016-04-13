@@ -10,7 +10,10 @@ export default function authed(state = initialState, action) {
       return Object.assign({}, state, {
         user: action.user
       })
-    
+
+    case types.RESET_AUTHED:
+      return Object.assign({}, initialState)
+
     default:
       return state
   }

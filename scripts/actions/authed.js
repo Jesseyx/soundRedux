@@ -43,6 +43,12 @@ function receiveAuthedUser(user) {
   }
 }
 
+function resetAuthed() {
+  return {
+    type: types.RESET_AUTHED
+  }
+}
+
 export function loginUser(shouldShowStream = true) {
   return dispatch => {
     SC.initialize({
@@ -56,5 +62,11 @@ export function loginUser(shouldShowStream = true) {
       dispatch(authUser(authObj.oauth_token, shouldShowStream));
     })
     .catch(err => { throw err });
+  }
+}
+
+export function logoutUser() {
+  return (dispatch, getState) => {
+    return dispatch(resetAuthed());
   }
 }

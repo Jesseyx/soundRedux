@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { loginUser } from '../actions/authed';
+import { loginUser, logoutUser } from '../actions/authed';
 import Popover from './Popover';
 
 const propTypes = {
@@ -21,7 +21,9 @@ class Nav extends Component {
   }
 
   logout(e) {
-
+    e.preventDefault();
+    const { dispatch } = this.props;
+    dispatch(logoutUser());
   }
 
   renderNavUser() {
