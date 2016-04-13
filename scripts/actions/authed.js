@@ -6,6 +6,16 @@ import { CLIENT_ID } from '../constants/Config';
 const COOKIE_PATH = 'accessToken';
 const SC_API_URL = '//api.soundcloud.com';
 
+export function initAuth() {
+  return dispatch => {
+    const accessToken = Cookies.get(COOKIE_PATH);
+    if (accessToken) {
+      return dispatch(authUser(accessToken, false));
+    }
+    return null;
+  }
+}
+
 function authUser(accessToken, shouldShowStream = true) {
   return dispatch =>
     dispatch(fetchAuthedUser(accessToken, shouldShowStream));
@@ -32,7 +42,6 @@ function receiveAuthedUser(user) {
     user
   }
 }
-
 
 export function loginUser(shouldShowStream = true) {
   return dispatch => {

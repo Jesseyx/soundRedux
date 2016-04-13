@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { initEnvironment } from '../actions/environment';
+import { initAuth } from '../actions/authed';
 
 import NavContainer from './NavContainer';
 import SongsContainer from './SongsContainer';
@@ -18,6 +19,7 @@ class App extends Component {
     // 组件开始装载前
     const { dispatch } = this.props;
     dispatch(initEnvironment());
+    dispatch(initAuth());
   }
 
   render() {
