@@ -67,6 +67,7 @@ export function loginUser(shouldShowStream = true) {
 
 export function logoutUser() {
   return (dispatch, getState) => {
+    Cookies.remove(COOKIE_PATH);
     return dispatch(resetAuthed());
   }
 }
