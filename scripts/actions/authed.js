@@ -1,7 +1,9 @@
 import SC from 'soundcloud';
 import Cookies from 'js-cookie';
+import { fetchSongs } from './playlists';
 import * as types from '../constants/ActionTypes';
 import { CLIENT_ID } from '../constants/Config';
+import { AUTHED_PLAYLIST_SUFFIX } from '../constants/PlaylistConstants';
 
 const COOKIE_PATH = 'accessToken';
 const SC_API_URL = '//api.soundcloud.com';
@@ -29,10 +31,20 @@ function fetchAuthedUser(accessToken, shouldShowStream) {
       .catch(err => { throw err });
 }
 
+function fetchStream(accessToken) {
+  return dispatch => {
+    dispatch(fetchSongs(
+      `${ SC_API_URL }/me/activities/tracks/affiliated?limit=50&oauth_token=${ accessToken }`,
+      `stream${ AUTHED_PLAYLIST_SUFFIX }`
+    ))
+  }
+}
+
 function receiveAuthedUserPre(accessToken, user, shouldShowStream) {
   console.log(user);
   return dispatch => {
     dispatch(receiveAuthedUser(user));
+    dispatch(fetchStream(accessToken));
   }
 }
 
