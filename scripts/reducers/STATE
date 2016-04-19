@@ -1,10 +1,20 @@
 {
-  authed: {
+    authed: {
 
-  },
-  environment: {
-    isMobile: false,
-    height: null,
-    width: null
-  }
+    },
+    entities: {
+        songs: {},
+        users: {},
+    },
+    environment: {
+        isMobile: false,
+        height: null,
+        width: null
+    },
+    playlists: {
+        isFetching: false,
+        items: [],
+        nextUrl: null,
+        futureUrl: null
+    }
 }
