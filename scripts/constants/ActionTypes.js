@@ -7,3 +7,6 @@ export const RESET_AUTHED = 'RESET_AUTHED';
 // songs
 export const REQUEST_SONGS = 'REQUEST_SONGS';
 export const RECEIVE_SONGS = 'RECEIVE_SONGS';
+
+// likes
+export const RECEIVE_LIKES = 'RECEIVE_LIKES';

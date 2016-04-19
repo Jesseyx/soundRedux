@@ -51,7 +51,7 @@ export function fetchSongs(url, playlist) {
   }
 }
 
-function receiveSongs(entities, songs, playlist, nextUrl, futureUrl) {
+export function receiveSongs(entities, songs, playlist, nextUrl, futureUrl) {
   return {
     type: types.RECEIVE_SONGS,
     entities,

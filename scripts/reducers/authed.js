@@ -1,7 +1,8 @@
 import * as types from '../constants/ActionTypes';
 
 const initialState = {
-  user: null
+  user: null,
+  likes: {},
 }
 
 export default function authed(state = initialState, action) {
@@ -13,6 +14,11 @@ export default function authed(state = initialState, action) {
 
     case types.RESET_AUTHED:
       return Object.assign({}, initialState)
+
+    case types.RECEIVE_LIKES:
+      return Object.assign({}, state, {
+        likes: action.likes,
+      })
 
     default:
       return state

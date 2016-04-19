@@ -1,9 +1,12 @@
 import SC from 'soundcloud';
 import Cookies from 'js-cookie';
+import { normalize, arrayOf } from 'normalizr';
 import { fetchSongs } from './playlists';
 import * as types from '../constants/ActionTypes';
 import { CLIENT_ID } from '../constants/Config';
 import { AUTHED_PLAYLIST_SUFFIX } from '../constants/PlaylistConstants';
+import { songSchema, userSchema } from '../constants/Schemes';
+import { receiveSongs } from '../actions/playlists';
 
 const COOKIE_PATH = 'accessToken';
 const SC_API_URL = '//api.soundcloud.com';
@@ -40,24 +43,56 @@ function fetchStream(accessToken) {
   }
 }
 
+function fetchLikes(accessToken) {
+  return dispatch =>
+    fetch(`${ SC_API_URL }/me/favorites?oauth_token=${ accessToken }`)
+      .then(response => response.json())
+      .then(json => {
+        console.log('*********************** fetchLinks ***********************');
+        console.log(json);
+        const songs = json.filter(song => song.streamable);
+        const normalized = normalize(songs, arrayOf(songSchema));
+        console.log('*********************** fetchLinks Normailizr ***********************');
+        console.log(normalized);
+        const likes = normalized.result
+          .reduce((obj, songId) => Object.assign({}, obj, { [songId]: 1 }), {});
+        dispatch(receiveLikes(likes));
+        dispatch(receiveSongs(
+          normalized.entities,
+          normalized.result,
+          `likes${ AUTHED_PLAYLIST_SUFFIX }`,
+          null
+        ));
+      })
+      .catch(err => { throw err; })
+}
+
 function receiveAuthedUserPre(accessToken, user, shouldShowStream) {
   console.log(user);
   return dispatch => {
     dispatch(receiveAuthedUser(user));
     dispatch(fetchStream(accessToken));
+    dispatch(fetchLikes(accessToken));
   }
 }
 
 function receiveAuthedUser(user) {
   return {
     type: types.RECEIVE_AUTHED_USER,
-    user
+    user,
   }
 }
 
 function resetAuthed() {
   return {
-    type: types.RESET_AUTHED
+    type: types.RESET_AUTHED,
+  }
+}
+
+function receiveLikes(likes) {
+  return {
+    type: types.RECEIVE_LIKES,
+    likes,
   }
 }
 
