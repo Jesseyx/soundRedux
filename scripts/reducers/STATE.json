@@ -1,0 +1,25 @@
+{
+    "authed": {
+        "user": null,
+        "likes": {},
+        "playlists": [],
+    },
+    "entities": {
+        "songs": {},
+        "users": {},
+        "playlists": {},
+    },
+    "environment": {
+        "isMobile": false,
+        "height": null,
+        "width": null
+    },
+    "playlists": {
+        "I liked|authed": {
+            "isFetching": false,
+            "items": [],
+            "nextUrl": null,
+            "futureUrl": null
+        }
+    }
+}

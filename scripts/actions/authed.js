@@ -5,7 +5,7 @@ import { fetchSongs } from './playlists';
 import * as types from '../constants/ActionTypes';
 import { CLIENT_ID } from '../constants/Config';
 import { AUTHED_PLAYLIST_SUFFIX } from '../constants/PlaylistConstants';
-import { songSchema, userSchema } from '../constants/Schemes';
+import { songSchema, userSchema, playlistSchema } from '../constants/Schemes';
 import { receiveSongs } from '../actions/playlists';
 
 const COOKIE_PATH = 'accessToken';
@@ -67,12 +67,37 @@ function fetchLikes(accessToken) {
       .catch(err => { throw err; })
 }
 
+function fetchPlaylists(accessToken) {
+  return dispatch =>
+    fetch(`${ SC_API_URL }/me/playlists?oauth_token=${ accessToken }`)
+      .then(response => response.json())
+      .then(json => {
+        console.log('*********************** fetchPlaylists ***********************');
+        console.log(json);
+        const normalized = normalize(json, arrayOf(playlistSchema));
+        console.log('*********************** fetchPlaylists normalized ***********************');
+        console.log(normalized);
+        dispatch(receiveAuthedPlaylists(normalized.result, normalized.entities));
+        normalized.result.forEach(playlistId => {
+          const playlist = normalized.entities.playlists[playlistId];
+          dispatch(receiveSongs(
+            {},
+            playlist.tracks,
+            playlist.title + AUTHED_PLAYLIST_SUFFIX,
+            null
+          ))
+        })
+      })
+      .catch(err => { throw err; })
+}
+
 function receiveAuthedUserPre(accessToken, user, shouldShowStream) {
   console.log(user);
   return dispatch => {
     dispatch(receiveAuthedUser(user));
     dispatch(fetchStream(accessToken));
     dispatch(fetchLikes(accessToken));
+    dispatch(fetchPlaylists(accessToken));
   }
 }
 
@@ -93,6 +118,14 @@ function receiveLikes(likes) {
   return {
     type: types.RECEIVE_LIKES,
     likes,
+  }
+}
+
+function receiveAuthedPlaylists(playlists, entities) {
+  return {
+    type: types.RECEIVE_AUTHED_PLAYLISTS,
+    playlists,
+    entities,
   }
 }
 

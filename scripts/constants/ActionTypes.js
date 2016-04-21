@@ -10,3 +10,6 @@ export const RECEIVE_SONGS = 'RECEIVE_SONGS';
 
 // likes
 export const RECEIVE_LIKES = 'RECEIVE_LIKES';
+
+// playlists
+export const RECEIVE_AUTHED_PLAYLISTS = 'RECEIVE_AUTHED_PLAYLISTS';
