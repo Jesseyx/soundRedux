@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { loginUser, logoutUser } from '../actions/authed';
 import Popover from './Popover';
+import Link from './Link';
 
 const propTypes = {
   dispatch: PropTypes.func.isRequired,
@@ -77,12 +78,21 @@ class Nav extends Component {
 
           <div className="nav-nav float-left">
             <div className="nav-nav-item">
-              <a className="nav-nav-item-link active" href="#">SoundRedux</a>
+              <Link
+                className="nav-nav-item-link active"
+                dispatch={ dispatch }
+                route={{ path: ['songs'] }}
+              >
+                SoundRedux
+              </Link>
             </div>
+
+
           </div>
 
           <div className="nav-nav float-right">
             <div className="nav-nav-item">
+              
               <div className="nav-search">
                 <i className="icon ion-search"></i>
                 <input className="nav-search-input" type="text" placeholder="SEARCH" />
