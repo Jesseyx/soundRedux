@@ -16,6 +16,25 @@ class Nav extends Component {
     this.logout = this.logout.bind(this);
   }
 
+  renderStreamLink() {
+    const { dispatch, authed } = this.props;
+    if (!authed.user) {
+      return null;
+    }
+
+    return (
+      <div className="nav-nav-item">
+        <Link
+          className="nav-nav-user-link"
+          dispatch={ dispatch }
+          route={{ path: ['me', 'stream' ]}}
+        >
+          <span className="nav-nav-user-link-text">stream</span>
+        </Link>
+      </div>
+    );
+  }
+
   login(e) {
     e.preventDefault();
     const { dispatch } = this.props;
@@ -87,7 +106,7 @@ class Nav extends Component {
                 SoundRedux
               </Link>
             </div>
-
+            { this.renderStreamLink() }
 
           </div>
 
