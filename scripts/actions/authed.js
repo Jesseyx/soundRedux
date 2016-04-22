@@ -91,13 +91,45 @@ function fetchPlaylists(accessToken) {
       .catch(err => { throw err; })
 }
 
+function fetchFollowings(accessToken) {
+  return dispatch =>
+    fetch(`${ SC_API_URL }/me/followings?oauth_token=${ accessToken }`)
+      .then(response => response.json())
+      .then(json => {
+        console.log('*********************** fetchFollowings ***********************');
+        console.log(json);
+        return normalize(json.collection, arrayOf(userSchema));
+      })
+      .then(normalized => {
+        console.log('*********************** fetchFollowings normalized ***********************');
+        console.log(normalized);
+
+        const users = normalized.result
+          .reduce((obj, userId) => Object.assign({}, obj, { [userId]: 1, }), {});
+        dispatch(receiveAuthedFollowings(users, normalized.entities));
+      })
+      .catch(err => { throw err; })
+}
+
 function receiveAuthedUserPre(accessToken, user, shouldShowStream) {
   console.log(user);
   return dispatch => {
+    dispatch(receiveAccessToken(accessToken));
     dispatch(receiveAuthedUser(user));
     dispatch(fetchStream(accessToken));
     dispatch(fetchLikes(accessToken));
     dispatch(fetchPlaylists(accessToken));
+    dispatch(fetchFollowings(accessToken));
+    if (shouldShowStream) {
+      //
+    }
+  }
+}
+
+function receiveAccessToken(accessToken) {
+  return {
+    type: types.RECEIVE_ACCESS_TOKEN,
+    accessToken,
   }
 }
 
@@ -126,6 +158,14 @@ function receiveAuthedPlaylists(playlists, entities) {
     type: types.RECEIVE_AUTHED_PLAYLISTS,
     playlists,
     entities,
+  }
+}
+
+function receiveAuthedFollowings(users, entities) {
+  return {
+    type: types.RECEIVE_AUTHED_FOLLOWINGS,
+    users,
+    entities
   }
 }
 
