@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { loginUser, logoutUser } from '../actions/authed';
 import Popover from './Popover';
 import Link from './Link';
+import NavSearch from './NavSearch';
 
 const propTypes = {
   dispatch: PropTypes.func.isRequired,
@@ -92,11 +93,7 @@ class Nav extends Component {
 
           <div className="nav-nav float-right">
             <div className="nav-nav-item">
-              
-              <div className="nav-search">
-                <i className="icon ion-search"></i>
-                <input className="nav-search-input" type="text" placeholder="SEARCH" />
-              </div>
+              <NavSearch dispatch={ dispatch } />
             </div>
             <div className="nav-nav-item">
               { this.renderNavUser() }
