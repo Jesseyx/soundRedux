@@ -3,17 +3,25 @@
         "user": null,
         "likes": {},
         "playlists": [],
-        "followings": {},
+        "followings": {}
     },
     "entities": {
         "songs": {},
         "users": {},
-        "playlists": {},
+        "playlists": {}
     },
     "environment": {
         "isMobile": false,
         "height": null,
         "width": null
+    },
+    "navigator": {
+        "route": {
+            "path": ["songs"],
+            "query": {
+                "q": "house"
+            }
+        }
     },
     "playlists": {
         "I liked|authed": {

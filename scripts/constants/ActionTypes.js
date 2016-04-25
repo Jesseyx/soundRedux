@@ -4,6 +4,9 @@ export const CHANGE_WIDTH_AND_HEIGHT = 'CHANGE_WIDTH_AND_HEIGHT';
 export const RECEIVE_AUTHED_USER = 'RECEIVE_AUTHED_USER';
 export const RESET_AUTHED = 'RESET_AUTHED';
 
+// routes
+export const CHANGE_PATH = 'CHANGE_PATH';
+
 // accessToken
 export const RECEIVE_ACCESS_TOKEN = 'RECEIVE_ACCESS_TOKEN';
 

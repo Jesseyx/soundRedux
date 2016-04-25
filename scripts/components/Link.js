@@ -1,11 +1,13 @@
 import React, { Component, PropTypes } from 'react';
+import { navigateTo} from '../actions/navigator';
+import { constructUrl } from '../utils/RouteUtils';
 
 const propTypes = {
+  children: PropTypes.node,
   className: PropTypes.string,
   dispatch: PropTypes.func.isRequired,
   route: PropTypes.object.isRequired,
   title: PropTypes.string,
-  children: PropTypes.node,
 }
 
 class Link extends Component {
@@ -15,16 +17,18 @@ class Link extends Component {
   }
 
   handleClick(e) {
-    console.log('click');
+    e.preventDefault();
+    const { dispatch, route } = this.props;
+    dispatch(navigateTo(route));
   }
 
   render() {
-    const { className, route, title, children } = this.props;
+    const { children, className, route, title } = this.props;
 
     return (
       <a
         className={ className }
-        href={ `/#/${ route }` }
+        href={ `/#/${ constructUrl(route) }` }
         title={ title ? '' + title : '' }
         onClick={ this.handleClick }
       >
