@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { initEnvironment } from '../actions/environment';
 import { initAuth } from '../actions/authed';
+import { initNavigator } from '../actions/navigator';
 
 import NavContainer from './NavContainer';
 import SongsContainer from './SongsContainer';
@@ -20,6 +21,7 @@ class App extends Component {
     const { dispatch } = this.props;
     dispatch(initEnvironment());
     dispatch(initAuth());
+    dispatch(initNavigator());
   }
 
   render() {
@@ -46,12 +48,15 @@ class App extends Component {
 App.propTypes = propTypes;
 
 function mapStateToProps(state, ownProps) {
-  const { environment } = state;
+  const { environment, navigator } = state;
   const { isMobile, height, width } = environment;
+  const { path } = navigator;
+
   return {
     isMobile,
     height,
-    width
+    width,
+    path,
   }
 }
 

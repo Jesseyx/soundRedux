@@ -14,3 +14,25 @@ export function constructUrl(route) {
 
   return result;
 }
+
+export function parseUrl(windowHash) {
+  let path = [];
+  const query = {};
+  const hashArr = windowHash.replace('#/', '').split('?');
+  path = hashArr[0].split('/');
+
+  if (hashArr.length > 1) {
+    hashArr[1].split('&').forEach(str => {
+      const arr = str.split('=');
+      const key = arr[0];
+      const value = arr[1];
+      if (isNaN(value)) {
+        query[key] = value;
+      } else {
+        query[key] = Number(value);
+      }
+    });
+  }
+
+  return { path, query }
+}

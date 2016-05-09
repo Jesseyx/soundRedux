@@ -22,11 +22,23 @@ class SongsContainer extends Component {
 SongsContainer.propTypes = propTypes;
 
 function mapStateToProps(state, ownProps) {
-  const { environment } = state;
+  const { entities, environment, navigator } = state;
   const { isMobile } = environment;
+  const { songs, users } = entities;
+  const { query } = navigator.route;
+
+  const time = query && query.t ? query.t : null;
+  let playlist = query && query.q ? query.q : 'house';
+  if (time) {
+    playlist = `${ playlist } - ${ time }`;
+  }
 
   return {
-    isMobile
+    isMobile,
+    playlist,
+    songs,
+    time,
+    users,
   }
 }
 

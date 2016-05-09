@@ -1,34 +1,24 @@
 import React, { Component, PropTypes } from 'react';
+import Toolbar from './Toolbar';
 
 const propTypes = {
-
+  playlist: PropTypes.string,
+  songs: PropTypes.object.isRequired,
+  time: PropTypes.number,
+  users: PropTypes.object.isRequired,
 }
 
 class Songs extends Component {
   render() {
+    const { dispatch, playlist, songs, time, users } = this.props;
+
     return (
       <div className="songs">
-        <div className="toolbar">
-          <div className="container">
-            <div className="toolbar-items">
-              <a className="toolbar-item toolbar-genre">chilly</a>
-              <a className="toolbar-item toolbar-genre">deep</a>
-              <a className="toolbar-item toolbar-genre">dubstep</a>
-              <a className="toolbar-item toolbar-genre">house</a>
-              <a className="toolbar-item toolbar-genre">progressive</a>
-              <a className="toolbar-item toolbar-genre">tech</a>
-              <a className="toolbar-item toolbar-genre">trance</a>
-              <a className="toolbar-item toolbar-genre">tropical</a>
-
-              <div className="toolbar-item toolbar-filter toolbar-times">
-                <i className="icon ion-funnel"></i>
-                <a className="toolbar-time">7 days</a>
-                <a className="toolbar-time">30 days</a>
-                <a className="toolbar-time">90 days</a>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Toolbar
+          dispatch={ dispatch }
+          playlist={ playlist }
+          time={ time }
+        />
 
         <div className="container">
           <div className="content">

@@ -1,5 +1,22 @@
 import * as types from '../constants/ActionTypes';
-import { constructUrl } from '../utils/RouteUtils';
+import { constructUrl, parseUrl } from '../utils/RouteUtils';
+
+export function initNavigator() {
+  return dispatch => {
+    window.onpopstate = e => {
+      dispatch(navigateBack(e))
+    }
+
+    if (window.location.hash !== '') {
+      dispatch(navigateTo(parseUrl(window.location.hash)))
+    }
+  }
+}
+
+export function navigateBack(e) {
+  console.log('navigateBack: ');
+  console.log(e);
+}
 
 export function changePath(route) {
   return {

@@ -124,7 +124,7 @@ class Nav extends Component {
           route={{ path: ['me', 'playlists', playlistId] }}
         >
           <div className="nav-playlist-title">
-            { `${ playlist.title } (${ playlist.track_count }` }
+            { `${ playlist.title } (${ playlist.track_count }` })
           </div>
 
           <div className="nav-playlist-images">
