@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import SongCard from './SongCard';
 
 const propTypes = {
   authed: PropTypes.object.isRequired,
@@ -25,11 +26,21 @@ class SongCards extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    // 暂时先设置 end
+    const { playlist, playlists } = nextProps;
+
+    this.setState({
+      end: playlists[playlist].items.length,
+    })
+  }
+
   renderSongs(start, end) {
     const chunk = 5;
     const { authed, dispatch, playlist, playlists, songs, users } = this.props;
     const items = playlist in playlists ? playlists[playlist].items : [];
     const result = [];
+    console.log(start + ', ' + end);
 
     for (let i = start; i < end; i += chunk) {
       const songCards = items.slice(i, i + chunk).map((songId, j) => {
@@ -39,24 +50,13 @@ class SongCards extends Component {
 
         return (
           <div className="col-1-5 clearfix" key={ `${ index }-${ song.id }` }>
-            <div className="card song-card">
-              <div className="song-card-image" style={{ backgroundImage: 'url(https://i1.sndcdn.com/artworks-000041124475-2lu7vg-t300x300.jpg)' }}>
-                <div className="toggle-play-button">
-                  <i className="toggle-play-button-icon ion-ios-play"></i>
-                </div>
-              </div>
-
-              <div className="song-card-user clearfix">
-                <img alt="" className="song-card-user-image" src="https://i1.sndcdn.com/avatars-000171638202-jhc1ep-large.jpg" />
-                <div className="song-card-details">
-                  <a className="song-card-title">Summertime Sadness</a>
-                  <a className="song-card-user-username">House</a>
-                  <div className="song-heart song-card-heart popover">
-                    <i className="icon ion-ios-heart"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <SongCard
+              authed={ authed }
+              dispatch={ dispatch }
+              isActive={ false }
+              song={ song }
+              user={ user }
+            />
           </div>
         )
       });

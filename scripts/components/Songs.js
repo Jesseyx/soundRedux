@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import Toolbar from './Toolbar';
 import SongCards from './SongCards';
 
+import { fetchSongsIfNeeded } from '../actions/playlists';
+
 const propTypes = {
   authed: PropTypes.object,
   dispatch: PropTypes.func.isRequired,
@@ -14,9 +16,16 @@ const propTypes = {
 }
 
 class Songs extends Component {
+  componentWillMount() {
+    const { dispatch, playlist, playlists } = this.props;
+    if (!(playlist in playlists) || playlists[playlist].items.length === 0) {
+      dispatch(fetchSongsIfNeeded(playlist));
+    }
+  }
+
   render() {
     const { authed, dispatch, height, playlist, playlists, songs, time, users } = this.props;
-
+    
     return (
       <div className="songs">
         <Toolbar

@@ -7,9 +7,9 @@ import { CLIENT_ID } from '../constants/Config';
 import { AUTHED_PLAYLIST_SUFFIX } from '../constants/PlaylistConstants';
 import { songSchema, userSchema, playlistSchema } from '../constants/Schemes';
 import { receiveSongs } from '../actions/playlists';
+import { SC_API_URL } from '../constants/Api';
 
 const COOKIE_PATH = 'accessToken';
-const SC_API_URL = '//api.soundcloud.com';
 
 export function initAuth() {
   return dispatch => {

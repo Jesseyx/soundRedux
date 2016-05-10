@@ -2,6 +2,7 @@ import { normalize, arrayOf } from 'normalizr';
 import * as types from '../constants/ActionTypes';
 import { songSchema } from '../constants/Schemes';
 import { GENRES_MAP } from '../constants/SongConstants';
+import { constructUrl } from '../utils/SongUtils';
 
 export function fetchSongs(url, playlist) {
   return (dispatch, getState) => {
@@ -62,9 +63,43 @@ export function receiveSongs(entities, songs, playlist, nextUrl, futureUrl) {
   }
 }
 
+export function fetchSongsIfNeeded(playlist) {
+  return (dispatch, getState) => {
+    const { playlists } = getState();
+
+    if (shouldFetchSongs(playlists, playlist)) {
+      const nextUrl = getNextUrl(playlists, playlist);
+      console.log(nextUrl);
+      return dispatch(fetchSongs(nextUrl, playlist));
+    }
+
+    return null;
+  }
+}
+
 function requestSongs(playlist) {
   return {
     type: types.REQUEST_SONGS,
     playlist
   }
+}
+
+function shouldFetchSongs(playlists, playlist) {
+  const activePlaylist = playlists[playlist];
+
+  if (!activePlaylist || !activePlaylist.isFetching && (activePlaylist.nextUrl !== null)) {
+    return true;
+  }
+
+  return false;
+}
+
+function getNextUrl(playlists, playlist) {
+  const activePlaylist = playlists[playlist];
+
+  if (!activePlaylist || activePlaylist.nextUrl === null) {
+    return constructUrl(playlist);
+  }
+
+  return activePlaylist.nextUrl;
 }
