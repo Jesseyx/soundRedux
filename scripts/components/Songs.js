@@ -25,7 +25,7 @@ class Songs extends Component {
 
   render() {
     const { authed, dispatch, height, playlist, playlists, songs, time, users } = this.props;
-    
+
     return (
       <div className="songs">
         <Toolbar

@@ -1,4 +1,9 @@
 import React, { Component, PropTypes } from 'react';
+import Link from './Link';
+import SongHeart from './SongHeart';
+import { IMAGE_SIZES} from '../constants/SongConstants';
+import { getImageUrl } from '../utils/SongUtils';
+import { formatSongTitle } from '../utils/FormatUtils';
 
 const propTypes = {
   authed: PropTypes.object.isRequired,
@@ -9,23 +14,59 @@ const propTypes = {
 }
 
 class SongCard extends Component {
-  render() {
+  renderTogglePlayButton() {
+    const { isActive } = this.props;
+
+    if (isActive) {
+
+    }
+
     return (
-      <div className="card song-card">
-        <div className="song-card-image" style={{ backgroundImage: 'url(https://i1.sndcdn.com/artworks-000041124475-2lu7vg-t300x300.jpg)' }}>
-          <div className="toggle-play-button">
-            <i className="toggle-play-button-icon ion-ios-play"></i>
-          </div>
+      <div className="toggle-play-button">
+        <i className="toggle-play-button-icon ion-ios-play"></i>
+      </div>
+    )
+  }
+  render() {
+    const { authed, dispatch, isActive, song, user } = this.props;
+    const image = getImageUrl(song.artwork_url, IMAGE_SIZES.LARGE);
+
+    return (
+      <div className={ `card song-card${ isActive ? ' active' : '' }` }>
+        <div className="song-card-image" style={{ backgroundImage: `url(${ image })` }}>
+          { this.renderTogglePlayButton() }
         </div>
 
         <div className="song-card-user clearfix">
-          <img alt="" className="song-card-user-image" src="https://i1.sndcdn.com/avatars-000171638202-jhc1ep-large.jpg" />
+          <img alt="User avatar"
+               className="song-card-user-image"
+               src={ getImageUrl(user.avatar_url) } />
           <div className="song-card-details">
-            <a className="song-card-title">Summertime Sadness</a>
-            <a className="song-card-user-username">House</a>
-            <div className="song-heart song-card-heart popover">
-              <i className="icon ion-ios-heart"></i>
-            </div>
+            <Link
+              className="song-card-title"
+              dispatch={ dispatch }
+              route={{ path: ['songs', song.id] }}
+              title={ song.title }
+            >
+              { formatSongTitle(song.title) }
+            </Link>
+
+            <Link
+              className="song-card-user-username"
+              dispatch={ dispatch }
+              route={{ path: ['users', user.id] }}
+              title={ user.username }
+            >
+              { user.username }
+            </Link>
+
+            <SongHeart
+              authed={ authed }
+              className="song-card-heart"
+              dispatch={ dispatch }
+              isLiked={ false }
+              songId={ song.id }
+            />
           </div>
         </div>
       </div>

@@ -55,12 +55,14 @@ class Popover extends Component {
     const { className, children } = this.props;
 
     return (
-      <div className={ classnames({
+      <div
+        className={ classnames({
           [className]: true,
           'popover': true,
           'open': isOpen === true
         })}
-        onClick={ this.toggleIsOpen }>
+        onClick={ this.toggleIsOpen }
+      >
         { children[0] }
         { isOpen ? children[1] : null }
       </div>
