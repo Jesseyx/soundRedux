@@ -38,6 +38,8 @@ class Songs extends Component {
   render() {
     const { authed, dispatch, height, playlist, playlists, songs, time, users } = this.props;
 
+    const scrollFunc = fetchSongsIfNeeded.bind(null, playlist);
+
     return (
       <div className="songs">
         <Toolbar
@@ -53,6 +55,7 @@ class Songs extends Component {
             height={ height }
             playlist={ playlist }
             playlists={ playlists }
+            scrollFunc={ scrollFunc }
             songs={ songs }
             users={ users }
           />

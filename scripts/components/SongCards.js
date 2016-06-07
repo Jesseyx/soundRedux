@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { fetchSongsIfNeeded } from '../actions/playlists';
 import SongCard from './SongCard';
 
 const propTypes = {
@@ -24,6 +25,12 @@ class SongCards extends Component {
       paddingTop: 0,
       start: 0,
     }
+
+    this.onScroll = this.onScroll.bind(this);
+  }
+
+  componentDidMount() {
+    window.addEventListener('scroll', this.onScroll, false);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -33,6 +40,33 @@ class SongCards extends Component {
     this.setState({
       end: playlists[playlist].items.length,
     })
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.onScroll, false);
+  }
+
+  onScroll() {
+    console.log(this.props);
+  }
+
+  getScrollState(props) {
+    const { height, playlist, playlists } = this.props;
+    const items = playlist in playlists ? playlists[playlist].items : [];
+
+    const MARGIN_TOP = 20;
+    const ROW_HEIGHT = 132;
+    const ITEMS_PER_ROW = 5;
+    const scrollY = window.scrollY;
+
+    let paddingTop = 0;
+    let paddingBottom = 0;
+    let start = 0;
+    let end = items.length;
+
+    if ((scrollY - ((ROW_HEIGHT * 3) + (MARGIN_TOP * 2))) > 0) {
+      const rowsToPad = Math.floor();
+    }
   }
 
   renderSongs(start, end) {

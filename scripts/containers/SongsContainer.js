@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Songs from '../components/Songs';
 import MobileSongs from '../components/MobileSongs';
+import { fetchSongsIfNeeded } from '../actions/playlists';
 
 const propTypes = {
   isMobile: PropTypes.bool
@@ -39,6 +40,7 @@ function mapStateToProps(state, ownProps) {
     isMobile,
     playlist,
     playlists,
+    scrollFunc: fetchSongsIfNeeded.bind(null, playlist),
     songs,
     time,
     users,
