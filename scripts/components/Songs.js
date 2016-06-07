@@ -23,6 +23,18 @@ class Songs extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { dispatch, playlist, playlists } = this.props;
+    const nextPlaylist = nextProps.playlist;
+
+    if (playlist !== nextPlaylist) {
+      if (!(nextPlaylist in playlists) || playlists[nextPlaylist].items.langth === 0) {
+        // 如果列表不存在或者为空
+        dispatch(fetchSongsIfNeeded(nextPlaylist));
+      }
+    }
+  }
+
   render() {
     const { authed, dispatch, height, playlist, playlists, songs, time, users } = this.props;
 
