@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { fetchSongsIfNeeded } from '../actions/playlists';
 import SongCard from './SongCard';
+import Spinner from './Spinner';
 
 const propTypes = {
   authed: PropTypes.object.isRequired,
@@ -34,12 +35,18 @@ class SongCards extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // 暂时先设置 end
-    const { playlist, playlists } = nextProps;
+    const { end, paddingBottom, paddingTop, start } = this.getScrollState(nextProps);
 
-    this.setState({
-      end: playlists[playlist].items.length,
-    })
+    const state = this.state;
+
+    if (paddingTop !== state.paddingTop || paddingBottom !== state.paddingBottom || end !== state.end || start !== state.start) {
+      this.setState({
+        end,
+        paddingBottom,
+        paddingTop,
+        start,
+      })
+    }
   }
 
   componentWillUnmount() {
@@ -47,7 +54,17 @@ class SongCards extends Component {
   }
 
   onScroll() {
-    console.log(this.props);
+    const { end, paddingBottom, paddingTop, start } = this.getScrollState(this.props);
+    const state = this.state;
+
+    if (paddingTop !== state.paddingTop || paddingBottom !== state.paddingBottom || end !== state.end || start !== state.start) {
+      this.setState({
+        end,
+        paddingBottom,
+        paddingTop,
+        start,
+      })
+    }
   }
 
   getScrollState(props) {
@@ -65,7 +82,28 @@ class SongCards extends Component {
     let end = items.length;
 
     if ((scrollY - ((ROW_HEIGHT * 3) + (MARGIN_TOP * 2))) > 0) {
-      const rowsToPad = Math.floor();
+      const rowsToPad = Math.floor(
+        (scrollY - ((ROW_HEIGHT * 2) + (MARGIN_TOP))) / (ROW_HEIGHT + MARGIN_TOP)
+      );
+
+      paddingTop = rowsToPad * (ROW_HEIGHT + MARGIN_TOP);
+      start = rowsToPad * ITEMS_PER_ROW;
+    }
+
+    const rowsOnScreen = Math.ceil(height / (ROW_HEIGHT + MARGIN_TOP));
+    const itemsToShow = (rowsOnScreen + 5) * ITEMS_PER_ROW;
+
+    if (items.length > (start + itemsToShow)) {
+      end = start + itemsToShow;
+      const rowsToPad = Math.ceil((items.length - end) / ITEMS_PER_ROW);
+      paddingBottom = rowsToPad * (ROW_HEIGHT + MARGIN_TOP);
+    }
+
+    return {
+      end,
+      paddingBottom,
+      paddingTop,
+      start,
     }
   }
 
@@ -122,6 +160,8 @@ class SongCards extends Component {
       <div className="content">
         <div className="padder" style={{ height: paddingTop }}></div>
         { this.renderSongs(start, end) }
+        <div className="padder" style={{ height: paddingBottom }}></div>
+        { isFetching ? <Spinner /> : null }
       </div>
     )
   }
