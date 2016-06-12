@@ -22,7 +22,7 @@ class SongsContainer extends Component {
 
 SongsContainer.propTypes = propTypes;
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
   const { authed, entities, environment, navigator, playlists } = state;
   const { height, isMobile } = environment;
   const { songs, users } = entities;

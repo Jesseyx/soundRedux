@@ -68,7 +68,7 @@ class SongCards extends Component {
   }
 
   getScrollState(props) {
-    const { height, playlist, playlists } = this.props;
+    const { height, playlist, playlists } = props;
     const items = playlist in playlists ? playlists[playlist].items : [];
 
     const MARGIN_TOP = 20;
@@ -112,11 +112,11 @@ class SongCards extends Component {
     const { authed, dispatch, playlist, playlists, songs, users } = this.props;
     const items = playlist in playlists ? playlists[playlist].items : [];
     const result = [];
-    console.log(start + ', ' + end);
 
     for (let i = start; i < end; i += chunk) {
       const songCards = items.slice(i, i + chunk).map((songId, j) => {
         const song = songs[songId];
+        const scrollFunc = fetchSongsIfNeeded.bind(null, playlist);
         const user = users[song.user_id];
         const index = i + j;
 
@@ -126,6 +126,7 @@ class SongCards extends Component {
               authed={ authed }
               dispatch={ dispatch }
               isActive={ false }
+              scrollFunc={ scrollFunc }
               song={ song }
               user={ user }
             />
@@ -135,7 +136,7 @@ class SongCards extends Component {
 
       if (songCards.length < chunk) {
         for (let j = 0; i < chunk - songCards.length + 1; j++) {
-          SongCards.push(
+          songCards.push(
             <div className="col-1-5" key={ `song-placeholder-${ (i + j) }` } />
           )
         }
