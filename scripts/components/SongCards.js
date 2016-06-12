@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { fetchSongsIfNeeded } from '../actions/playlists';
 import SongCard from './SongCard';
 import Spinner from './Spinner';
+import InfiniteScrollify from './InfiniteScrollify';
 
 const propTypes = {
   authed: PropTypes.object.isRequired,
@@ -170,4 +171,4 @@ class SongCards extends Component {
 
 SongCards.propTypes = propTypes;
 
-export default SongCards;
+export default InfiniteScrollify(SongCards);
