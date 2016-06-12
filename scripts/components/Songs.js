@@ -51,6 +51,7 @@ class Songs extends Component {
         <Toolbar
           dispatch={ dispatch }
           playlist={ playlist }
+          sticky={ sticky }
           time={ time }
         />
 
