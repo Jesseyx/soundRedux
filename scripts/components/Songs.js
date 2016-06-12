@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
+import classnames from 'classnames';
 import Toolbar from './Toolbar';
 import SongCards from './SongCards';
+import stickify from './Stickify';
 
 import { fetchSongsIfNeeded } from '../actions/playlists';
 
@@ -10,6 +12,7 @@ const propTypes = {
   height: PropTypes.number,
   playlist: PropTypes.string,
   playlists: PropTypes.object.isRequired,
+  sticky: PropTypes.bool,
   songs: PropTypes.object.isRequired,
   time: PropTypes.number,
   users: PropTypes.object.isRequired,
@@ -36,12 +39,15 @@ class Songs extends Component {
   }
 
   render() {
-    const { authed, dispatch, height, playlist, playlists, songs, time, users } = this.props;
+    const { authed, dispatch, height, playlist, playlists, sticky, songs, time, users } = this.props;
 
     const scrollFunc = fetchSongsIfNeeded.bind(null, playlist);
 
     return (
-      <div className="songs">
+      <div className={ classnames({
+        songs: true,
+        sticky: sticky,
+      }) }>
         <Toolbar
           dispatch={ dispatch }
           playlist={ playlist }
@@ -67,4 +73,5 @@ class Songs extends Component {
 
 Songs.propTypes = propTypes;
 
-export default Songs;
+// Toolbar fixed
+export default stickify(Songs, 50);
