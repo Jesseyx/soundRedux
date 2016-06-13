@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
+import { navigateTo } from '../actions/navigator';
 
 const propTypes = {
   dispatch: PropTypes.func.isRequired,
@@ -28,9 +29,12 @@ class NavSearch extends Component {
       const { dispatch } = this.props;
       const value = e.currentTarget.value.trim();
       if (value !== '') {
-        dispatch({
-          type: 'Test'
-        })
+        dispatch(navigateTo({
+          path: ['songs'],
+          query: {
+            q: value
+          }
+        }))
       }
     }
   }
