@@ -24,6 +24,11 @@ class App extends Component {
     dispatch(initNavigator());
   }
 
+  renderContent() {
+    // do route
+    return <SongsContainer />
+  }
+
   render() {
     const { isMobile, height, width } = this.props;
 
@@ -39,7 +44,7 @@ class App extends Component {
     return (
       <div>
         <NavContainer />
-        <SongsContainer />
+        { this.renderContent() }
       </div>
     )
   }
