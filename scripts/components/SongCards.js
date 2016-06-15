@@ -3,6 +3,7 @@ import { fetchSongsIfNeeded } from '../actions/playlists';
 import SongCard from './SongCard';
 import Spinner from './Spinner';
 import InfiniteScrollify from './InfiniteScrollify';
+import { playSong } from '../actions/player';
 
 const propTypes = {
   authed: PropTypes.object.isRequired,
@@ -120,6 +121,7 @@ class SongCards extends Component {
         const scrollFunc = fetchSongsIfNeeded.bind(null, playlist);
         const user = users[song.user_id];
         const index = i + j;
+        const playSongFunc = this.playSong.bind(this, index);
 
         return (
           <div className="col-1-5 clearfix" key={ `${ index }-${ song.id }` }>
@@ -127,6 +129,7 @@ class SongCards extends Component {
               authed={ authed }
               dispatch={ dispatch }
               isActive={ false }
+              playSong={ playSongFunc }
               scrollFunc={ scrollFunc }
               song={ song }
               user={ user }
@@ -151,6 +154,13 @@ class SongCards extends Component {
     }
 
     return result;
+  }
+
+  playSong(index, e) {
+    e.preventDefault();
+
+    const { playlist, dispatch } = this.props;
+    dispatch(playSong(playlist, index));
   }
 
   render() {

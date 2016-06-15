@@ -9,20 +9,21 @@ const propTypes = {
   authed: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   isActive: PropTypes.bool.isRequired,
+  playSong: PropTypes.func.isRequired,
   song: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
 }
 
 class SongCard extends Component {
   renderTogglePlayButton() {
-    const { isActive } = this.props;
+    const { isActive, playSong } = this.props;
 
     if (isActive) {
 
     }
 
     return (
-      <div className="toggle-play-button">
+      <div className="toggle-play-button" onClick={ playSong }>
         <i className="toggle-play-button-icon ion-ios-play"></i>
       </div>
     )
