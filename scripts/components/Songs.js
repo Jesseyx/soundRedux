@@ -10,6 +10,7 @@ const propTypes = {
   authed: PropTypes.object,
   dispatch: PropTypes.func.isRequired,
   height: PropTypes.number,
+  playingSongId: PropTypes.number,
   playlist: PropTypes.string,
   playlists: PropTypes.object.isRequired,
   sticky: PropTypes.bool,
@@ -39,7 +40,7 @@ class Songs extends Component {
   }
 
   render() {
-    const { authed, dispatch, height, playlist, playlists, sticky, songs, time, users } = this.props;
+    const { authed, dispatch, height, playingSongId, playlist, playlists, sticky, songs, time, users } = this.props;
 
     const scrollFunc = fetchSongsIfNeeded.bind(null, playlist);
 
@@ -60,6 +61,7 @@ class Songs extends Component {
             authed={ authed }
             dispatch={ dispatch }
             height={ height }
+            playingSongId={ playingSongId }
             playlist={ playlist }
             playlists={ playlists }
             scrollFunc={ scrollFunc }

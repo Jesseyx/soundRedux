@@ -8,5 +8,23 @@ const initialState = {
 }
 
 export default function player(state = initialState, action) {
-  return state;
+  switch (action.type) {
+    case types.CHANGE_CURRENT_TIME:
+      return Object.assign({}, state, {
+        currentTime: action.time,
+      })
+
+    case types.CHANGE_SELECTED_PLAYLISTS:
+      return Object.assign({}, state, {
+        selectedPlaylists: action.playlists,
+      })
+
+    case types.CHANGE_PLAYING_SONG:
+      return Object.assign({}, state, {
+        currentSongIndex: action.songIndex,
+      })
+
+    default:
+      return state;
+  }
 }

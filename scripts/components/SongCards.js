@@ -9,6 +9,7 @@ const propTypes = {
   authed: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   height: PropTypes.number,
+  playingSongId: PropTypes.number,
   playlist: PropTypes.string.isRequired,
   playlists: PropTypes.object.isRequired,
   songs: PropTypes.object.isRequired,
@@ -111,7 +112,7 @@ class SongCards extends Component {
 
   renderSongs(start, end) {
     const chunk = 5;
-    const { authed, dispatch, playlist, playlists, songs, users } = this.props;
+    const { authed, dispatch, playlist, playlists, playingSongId, songs, users } = this.props;
     const items = playlist in playlists ? playlists[playlist].items : [];
     const result = [];
 
@@ -128,7 +129,7 @@ class SongCards extends Component {
             <SongCard
               authed={ authed }
               dispatch={ dispatch }
-              isActive={ false }
+              isActive={ song.id === playingSongId }
               playSong={ playSongFunc }
               scrollFunc={ scrollFunc }
               song={ song }

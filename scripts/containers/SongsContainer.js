@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import Songs from '../components/Songs';
 import MobileSongs from '../components/MobileSongs';
 import { fetchSongsIfNeeded } from '../actions/playlists';
+import { getPlayingSongId } from '../utils/PlayerUtils';
 
 const propTypes = {
   isMobile: PropTypes.bool
@@ -23,10 +24,11 @@ class SongsContainer extends Component {
 SongsContainer.propTypes = propTypes;
 
 function mapStateToProps(state) {
-  const { authed, entities, environment, navigator, playlists } = state;
+  const { authed, entities, environment, navigator, player,  playlists } = state;
   const { height, isMobile } = environment;
   const { songs, users } = entities;
   const { query } = navigator.route;
+  const playingSongId = getPlayingSongId(player, playlists);
 
   const time = query && query.t ? query.t : null;
   let playlist = query && query.q ? query.q : 'house';
@@ -38,6 +40,7 @@ function mapStateToProps(state) {
     authed,
     height,
     isMobile,
+    playingSongId,
     playlist,
     playlists,
     scrollFunc: fetchSongsIfNeeded.bind(null, playlist),

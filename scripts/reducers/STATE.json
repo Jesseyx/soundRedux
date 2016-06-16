@@ -23,6 +23,12 @@
             }
         }
     },
+    "player": {
+        "currentSongIndex": null,
+        "currentTime": 0,
+        "isPlaying": false,
+        "selectedPlaylists": [],
+    },
     "playlists": {
         "I liked|authed": {
             "isFetching": false,
