@@ -7,6 +7,7 @@ import { initNavigator } from '../actions/navigator';
 
 import NavContainer from './NavContainer';
 import SongsContainer from './SongsContainer';
+import PlayerContainer from './PlayerContainer';
 
 const propTypes = {
   dispatch: PropTypes.func.isRequired,
@@ -35,6 +36,7 @@ class App extends Component {
     if (isMobile) {
       return (
         <div className="mobile" style={{ height: `${ height }px`, width: `${ width }px` }}>
+          <PlayerContainer />
           { this.renderContent() }
           <NavContainer />
         </div>
@@ -45,6 +47,7 @@ class App extends Component {
       <div>
         <NavContainer />
         { this.renderContent() }
+        <PlayerContainer />
       </div>
     )
   }
