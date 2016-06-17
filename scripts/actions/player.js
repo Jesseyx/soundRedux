@@ -1,6 +1,6 @@
 import * as types from '../constants/ActionTypes';
 
-function changeCurrentTime (time) {
+export function changeCurrentTime (time) {
   return {
     type: types.CHANGE_CURRENT_TIME,
     time,

@@ -4,7 +4,9 @@ import classnames from 'classnames';
 import SongDetails from '../components/SongDetails';
 import { formatSeconds, formatStreamUrl } from '../utils/FormatUtils';
 import { getImageUrl } from '../utils/SongUtils';
-import { toggleIsPlaying } from '../actions/player';
+import { changeCurrentTime, toggleIsPlaying } from '../actions/player';
+import { offsetLeft } from '../utils/MouseUtils';
+import LocalStorageUtils from '../utils/LocalStorageUtils';
 
 const propTypes = {
   dispatch: PropTypes.func.isRequired,
@@ -20,11 +22,15 @@ class Player extends Component {
   constructor(props) {
     super(props);
 
+    const previousVolumeLevel = Number.parseFloat(LocalStorageUtils.get('volume'));
     this.state = {
-      duration: 0,            // 持续时间
-      repeat: false,          // 重复
-      shuffle: false,         // 随机
-      volume: 1,              // 音量
+      currentTime: 0,                                 // 当前播放时间
+      duration: 0,                                    // 持续时间
+      isSeeking: false,                               // 是否正在 loading
+      muted: false,                                   // 静音
+      repeat: false,                                  // 重复
+      shuffle: false,                                 // 随机
+      volume: previousVolumeLevel || 1,               // 音量
     }
 
     this.handleKeyDown = this.handleKeyDown.bind(this);
@@ -39,10 +45,16 @@ class Player extends Component {
     this.seek = this.seek.bind(this);
     this.handleMouseClick = this.handleMouseClick.bind(this);
     this.handleSeekMouseDown = this.handleSeekMouseDown.bind(this);
+    this.handleSeekMouseMove = this.handleSeekMouseMove.bind(this);
+    this.handleSeekMouseUp = this.handleSeekMouseUp.bind(this);
+    this.changeVolume = this.changeVolume.bind(this);
+    this.handleVolumeMouseDown = this.handleVolumeMouseDown.bind(this);
+    this.handleVolumeMouseMove = this.handleVolumeMouseMove.bind(this);
+    this.handleVolumeMouseUp = this.handleVolumeMouseUp.bind(this);
   }
 
   componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyDown);
+    document.addEventListener('keydown', this.handleKeyDown, false);
 
     // refs 中是是虚拟 DOM
     const audioElement = ReactDOM.findDOMNode(this.refs.audio);
@@ -64,6 +76,39 @@ class Player extends Component {
     audioElement.play();
   }
 
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyDown, false);
+
+    const audioElement = ReactDOM.findDOMNode(this.refs.audio);
+    audioElement.removeEventListener('ended', this.handleEnded, false);
+    audioElement.removeEventListener('loadedmetadata', this.handleLoadedMetadata, false);
+    audioElement.removeEventListener('loadstart', this.handleLoadStart, false);
+    audioElement.removeEventListener('pause', this.handlePause, false);
+    audioElement.removeEventListener('play', this.handlePlay, false);
+    audioElement.removeEventListener('timeupdate', this.handleTimeUpdate, false);
+    audioElement.removeEventListener('volumechange', this.handleVolumeChange, false);
+  }
+
+  bindSeekMouseEvents() {
+    document.addEventListener('mousemove', this.handleSeekMouseMove);
+    document.addEventListener('mouseup', this.handleSeekMouseUp);
+  }
+
+  unbindSeekMouseEvents() {
+    document.removeEventListener('mousemove', this.handleSeekMouseMove);
+    document.removeEventListener('mouseup', this.handleSeekMouseUp);
+  }
+
+  bindVolumeMouseEvents() {
+    document.addEventListener('mousemove', this.handleVolumeMouseMove);
+    document.addEventListener('mouseup', this.handleVolumeMouseUp);
+  }
+
+  unbindVolumeMouseEvents() {
+    document.removeEventListener('mousemove', this.handleVolumeMouseMove);
+    document.removeEventListener('mouseup', this.handleVolumeMouseUp);
+  }
+
   handleKeyDown(e) {
 
   }
@@ -73,7 +118,10 @@ class Player extends Component {
   }
 
   handleLoadedMetadata() {
-
+    const audioElement = ReactDOM.findDOMNode(this.refs.audio);
+    this.setState({
+      duration: Math.floor(audioElement.duration),
+    })
   }
 
   handleLoadStart() {
@@ -90,28 +138,133 @@ class Player extends Component {
     dispatch(toggleIsPlaying(true));
   }
 
-  handleTimeUpdate() {
+  handleTimeUpdate(e) {
+    if (this.state.isSeeking) {
+      return;
+    }
 
+    const { dispatch, player } = this.props;
+    const audioElement = e.currentTarget;
+    const currentTime = Math.floor(audioElement.currentTime);
+
+    if (currentTime === player.currentTime) {
+      return;
+    }
+
+    dispatch(changeCurrentTime(currentTime));
   }
 
-  handleVolumeChange() {
+  handleVolumeChange(e) {
+    if (this.state.isSeeking) {
+      return;
+    }
 
+    const volume = e.currentTarget.volume;
+    LocalStorageUtils.set('volume', volume);
+    this.setState({
+      volume,
+    })
   }
 
   togglePlay() {
+    const { isPlaying } = this.props.player;
+    const audioElement = ReactDOM.findDOMNode(this.refs.audio);
 
+    if (isPlaying) {
+      audioElement.pause();
+    } else {
+      audioElement.play();
+    }
   }
 
-  seek() {
-
+  handleMouseClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
   }
 
-  handleMouseClick() {
+  seek(e) {
+    const { dispatch } = this.props;
+    const audioElement = ReactDOM.findDOMNode(this.refs.audio);
+    const percent = (e.clientX - offsetLeft(e.currentTarget)) / e.currentTarget.offsetWidth;
+    const currentTime = Math.floor(percent * this.state.duration);
 
+    dispatch(changeCurrentTime(currentTime));
+    audioElement.currentTime = currentTime;
   }
 
   handleSeekMouseDown() {
+    this.bindSeekMouseEvents();
+    this.setState({
+      isSeeking: true,
+    })
+  }
 
+  handleSeekMouseMove(e) {
+    const { dispatch } = this.props;
+    const seekBar = ReactDOM.findDOMNode(this.refs.seekBar);
+    const diff = e.clientX - offsetLeft(seekBar);
+    const pos = diff < 0 ? 0 : diff;
+    let percent = pos / seekBar.offsetWidth;
+    percent = percent > 1 ? 1 : percent;
+
+    dispatch(changeCurrentTime(Math.floor(percent * this.state.duration)));
+  }
+
+  handleSeekMouseUp() {
+    if (!this.state.isSeeking) {
+      return;
+    }
+
+    this.unbindSeekMouseEvents();
+
+    const { currentTime } = this.props.player;
+
+    this.setState({
+      isSeeking: false,
+    }, () => {
+      ReactDOM.findDOMNode(this.refs.audio).currentTime = currentTime;
+    })
+  }
+
+  changeVolume(e) {
+    const audioElement = ReactDOM.findDOMNode(this.refs.audio);
+    const volume = (e.clientX - offsetLeft(e.currentTarget)) / e.currentTarget.offsetWidth;
+    audioElement.volume = volume;
+  }
+
+  handleVolumeMouseDown() {
+    this.bindVolumeMouseEvents();
+    this.setState({
+      isSeeking: true,
+    })
+  }
+
+  handleVolumeMouseMove(e) {
+    const volumeBar = ReactDOM.findDOMNode(this.refs.volumeBar);
+    const diff = e.clientX - offsetLeft(volumeBar);
+    const pos = diff < 0 ? 0 : diff;
+    let percent = pos / volumeBar.offsetWidth;
+    percent = percent > 1 ? 1 : percent;
+
+    this.setState({
+      volume: percent,
+    })
+
+    // ReactDOM.findDOMNode(this.refs.audio).volume = percent;
+  }
+
+  handleVolumeMouseUp(e) {
+    if (!this.state.isSeeking) {
+      return;
+    }
+
+    this.unbindVolumeMouseEvents();
+
+    this.setState({
+      isSeeking: false,
+    }, () => {
+      ReactDOM.findDOMNode(this.refs.audio).volume = this.state.volume;
+    })
   }
 
   renderDurationBar() {
@@ -132,6 +285,21 @@ class Player extends Component {
         </div>
       )
     }
+  }
+
+  renderVolumeBar() {
+    const { muted, volume } = this.state;
+    const width = muted ? 0 : volume * 100;
+
+    return (
+      <div className="player-seek-duration-bar" style={{ width: `${ width }%` }}>
+        <div
+          className="player-seek-handle"
+          onClick={ this.handleMouseClick }
+          onMouseDown={ this.handleVolumeMouseDown }
+        />
+      </div>
+    )
   }
 
   render() {
@@ -211,11 +379,9 @@ class Player extends Component {
                 </div>
               </div>
               <div className="player-volume">
-                <div className="player-seek-bar-wrap">
+                <div className="player-seek-bar-wrap" onClick={ this.changeVolume }>
                   <div className="player-seek-bar" ref="volumeBar">
-                    <div className="player-seek-duration-bar" style={{ width: '100%' }}>
-                      <div className="player-seek-handle"></div>
-                    </div>
+                    { this.renderVolumeBar() }
                   </div>
                 </div>
               </div>
