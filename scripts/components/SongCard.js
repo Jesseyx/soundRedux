@@ -20,7 +20,7 @@ class SongCard extends Component {
     const { isActive, playSong } = this.props;
 
     if (isActive) {
-      <TogglePlayButtonContainer />
+      return <TogglePlayButtonContainer />
     }
 
     return (
