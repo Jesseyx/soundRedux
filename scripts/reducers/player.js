@@ -24,6 +24,11 @@ export default function player(state = initialState, action) {
         currentSongIndex: action.songIndex,
       })
 
+    case types.TOGGLE_IS_PLAYING:
+      return Object.assign({}, state, {
+        isPlaying: action.isPlaying,
+      })
+
     default:
       return state;
   }

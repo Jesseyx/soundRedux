@@ -45,3 +45,10 @@ export function playSong(playlist, index) {
     dispatch(changePlayingSong(index));
   }
 }
+
+export function toggleIsPlaying(isPlaying) {
+  return {
+    type: types.TOGGLE_IS_PLAYING,
+    isPlaying,
+  }
+}

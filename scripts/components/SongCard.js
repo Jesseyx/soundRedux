@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import Link from './Link';
 import SongHeart from './SongHeart';
+import TogglePlayButtonContainer from '../containers/TogglePlayButtonContainer';
 import { IMAGE_SIZES} from '../constants/SongConstants';
 import { getImageUrl } from '../utils/SongUtils';
 import { formatSongTitle } from '../utils/FormatUtils';
@@ -19,7 +20,7 @@ class SongCard extends Component {
     const { isActive, playSong } = this.props;
 
     if (isActive) {
-
+      <TogglePlayButtonContainer />
     }
 
     return (
