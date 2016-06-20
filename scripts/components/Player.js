@@ -51,6 +51,7 @@ class Player extends Component {
     this.handleVolumeMouseDown = this.handleVolumeMouseDown.bind(this);
     this.handleVolumeMouseMove = this.handleVolumeMouseMove.bind(this);
     this.handleVolumeMouseUp = this.handleVolumeMouseUp.bind(this);
+    this.toggleMute = this.toggleMute.bind(this);
   }
 
   componentDidMount() {
@@ -302,6 +303,46 @@ class Player extends Component {
     )
   }
 
+  toggleMute() {
+    const audioElement = ReactDOM.findDOMNode(this.refs.audio);
+    if (this.state.muted) {
+      audioElement.muted = false;
+    } else {
+      audioElement.muted = true;
+    }
+
+    this.setState({
+      muted: !this.state.muted,
+    })
+  }
+
+  renderVolumeIcon() {
+    const { muted, volume } = this.state;
+
+    if (muted) {
+      // 静音
+      return <i className="icon ion-android-volume-off" />
+    }
+
+    if (volume === 0) {
+      return <i className="icon ion-android-volume-mute" />;
+    } else if (volume === 1) {
+      return (
+        <div className="player-volume-button-wrap">
+          <i className="icon ion-android-volume-up" />
+          <i className="icon ion-android-volume-mute" />
+        </div>
+      )
+    }
+
+    return (
+      <div className="player-volume-button-wrap">
+        <i className="icon ion-android-volume-down" />
+        <i className="icon ion-android-volume-mute" />
+      </div>
+    )
+  }
+
   render() {
     const { dispatch, player, playingSongId, songs, users } = this.props;
     const { isPlaying, currentTime } = player;
@@ -372,11 +413,10 @@ class Player extends Component {
               <div className="player-button top-right">
                 <i className="icon ion-android-list" />
               </div>
-              <div className="player-button player-volume-button">
-                <div className="player-volume-button-wrap">
-                  <i className="icon ion-android-volume-up" />
-                  <i className="icon ion-android-volume-mute" />
-                </div>
+              <div
+                className="player-button player-volume-button"
+                onClick={ this.toggleMute }>
+                { this.renderVolumeIcon() }
               </div>
               <div className="player-volume">
                 <div className="player-seek-bar-wrap" onClick={ this.changeVolume }>
