@@ -7,6 +7,8 @@ import { getImageUrl } from '../utils/SongUtils';
 import { changeCurrentTime, toggleIsPlaying } from '../actions/player';
 import { offsetLeft } from '../utils/MouseUtils';
 import LocalStorageUtils from '../utils/LocalStorageUtils';
+import { CHANGE_TYPES } from '../constants/SongConstants';
+import { changeSong } from '../actions/player';
 
 const propTypes = {
   dispatch: PropTypes.func.isRequired,
@@ -52,6 +54,8 @@ class Player extends Component {
     this.handleVolumeMouseMove = this.handleVolumeMouseMove.bind(this);
     this.handleVolumeMouseUp = this.handleVolumeMouseUp.bind(this);
     this.toggleMute = this.toggleMute.bind(this);
+    this.toggleShuffle = this.toggleShuffle.bind(this);
+    this.toggleRepeat = this.toggleRepeat.bind(this);
   }
 
   componentDidMount() {
@@ -75,6 +79,14 @@ class Player extends Component {
     audioElement.addEventListener('volumechange', this.handleVolumeChange, false);
 
     audioElement.play();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.playingSongId && prevProps.playingSongId === this.props.playingSongId) {
+      return;
+    }
+
+    ReactDOM.findDOMNode(this.refs.audio).play();
   }
 
   componentWillUnmount() {
@@ -115,7 +127,13 @@ class Player extends Component {
   }
 
   handleEnded() {
-
+    if (this.state.repeat) {
+      ReactDOM.findDOMNode(this.refs.audio).play();
+    } else if (this.state.shuffle) {
+      this.changeSong(CHANGE_TYPES.SHUFFLE);
+    } else {
+      this.changeSong(CHANGE_TYPES.NEXT);
+    }
   }
 
   handleLoadedMetadata() {
@@ -126,7 +144,11 @@ class Player extends Component {
   }
 
   handleLoadStart() {
-
+    const { dispatch } = this.props;
+    dispatch(changeCurrentTime(0));
+    this.setState({
+      duration: 0,
+    })
   }
 
   handlePause() {
@@ -343,12 +365,32 @@ class Player extends Component {
     )
   }
 
+  changeSong(changeType) {
+    console.log(changeType);
+    const { dispatch } = this.props;
+    dispatch(changeSong(changeType));
+  }
+
+  toggleShuffle() {
+    this.setState({
+      shuffle: !this.state.shuffle,
+    })
+  }
+
+  toggleRepeat() {
+    this.setState({
+      repeat: !this.state.repeat,
+    })
+  }
+
   render() {
     const { dispatch, player, playingSongId, songs, users } = this.props;
     const { isPlaying, currentTime } = player;
     const song = songs[playingSongId];
     const user = users[song.user_id];
     const { duration } = this.state;
+    const prevFunc = this.changeSong.bind(this, CHANGE_TYPES.PREV);
+    const nextFunc = this.changeSong.bind(this, this.state.shuffle ? CHANGE_TYPES.SHUFFLE : CHANGE_TYPES.NEXT);
 
     return (
       <div className="player">
@@ -368,7 +410,10 @@ class Player extends Component {
             </div>
 
             <div className="player-section">
-              <div className="player-button">
+              <div
+                className="player-button"
+                onClick={ prevFunc }
+              >
                 <i className="icon ion-ios-rewind" />
               </div>
               <div className="player-button" onClick={ this.togglePlay }>
@@ -378,7 +423,10 @@ class Player extends Component {
                   'ion-ios-play': !isPlaying,
                 }) } />
               </div>
-              <div className="player-button">
+              <div
+                className="player-button"
+                onClick={ nextFunc }
+              >
                 <i className="icon ion-ios-fastforward" />
               </div>
             </div>
@@ -398,16 +446,22 @@ class Player extends Component {
             </div>
 
             <div className="player-section">
-              <div className={ classnames({
-                'player-button': true,
-                active: this.state.repeat,
-              }) }>
+              <div
+                className={ classnames({
+                  'player-button': true,
+                  active: this.state.repeat,
+                }) }
+                onClick={ this.toggleRepeat }
+              >
                 <i className="icon ion-loop" />
               </div>
-              <div className={ classnames({
-                'player-button': true,
-                active: this.state.shuffle,
-              }) }>
+              <div
+                className={ classnames({
+                  'player-button': true,
+                  active: this.state.shuffle,
+                }) }
+                onClick={ this.toggleShuffle }
+              >
                 <i className="icon ion-shuffle" />
               </div>
               <div className="player-button top-right">

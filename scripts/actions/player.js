@@ -1,4 +1,5 @@
 import * as types from '../constants/ActionTypes';
+import { CHANGE_TYPES } from '../constants/SongConstants';
 
 export function changeCurrentTime (time) {
   return {
@@ -50,5 +51,29 @@ export function toggleIsPlaying(isPlaying) {
   return {
     type: types.TOGGLE_IS_PLAYING,
     isPlaying,
+  }
+}
+
+export function changeSong(changeType) {
+  return (dispatch, getState) => {
+    const { player, playlists } = getState();
+    const { currentSongIndex, selectedPlaylists } = player;
+    const currentPlaylist = selectedPlaylists[selectedPlaylists.length - 1];
+    const currentPlaylistItems = playlists[currentPlaylist].items;
+    let newSongIndex;
+
+    if (changeType === CHANGE_TYPES.NEXT) {
+      newSongIndex = currentSongIndex + 1;
+    } else if (changeType === CHANGE_TYPES.PREV) {
+      newSongIndex = currentSongIndex - 1;
+    } else if (changeType === CHANGE_TYPES.SHUFFLE) {
+      newSongIndex = Math.floor((Math.random() * currentPlaylistItems.length - 1) + 0);
+    }
+
+    if (newSongIndex >= currentPlaylistItems.length || newSongIndex < 0) {
+      return null;
+    }console.log(newSongIndex);
+
+    return dispatch(changePlayingSong(newSongIndex));
   }
 }
