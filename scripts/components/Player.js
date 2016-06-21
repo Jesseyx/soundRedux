@@ -9,6 +9,7 @@ import { offsetLeft } from '../utils/MouseUtils';
 import LocalStorageUtils from '../utils/LocalStorageUtils';
 import { CHANGE_TYPES } from '../constants/SongConstants';
 import { changeSong } from '../actions/player';
+import Popover from '../components/Popover';
 
 const propTypes = {
   dispatch: PropTypes.func.isRequired,
@@ -383,6 +384,12 @@ class Player extends Component {
     })
   }
 
+  renderPlaylist() {
+    const { dispatch, player, playlists, songs } = this.props;
+
+    return '点击列表！';
+  }
+
   render() {
     const { dispatch, player, playingSongId, songs, users } = this.props;
     const { isPlaying, currentTime } = player;
@@ -464,9 +471,10 @@ class Player extends Component {
               >
                 <i className="icon ion-shuffle" />
               </div>
-              <div className="player-button top-right">
+              <Popover className="player-button top-right">
                 <i className="icon ion-android-list" />
-              </div>
+                { this.renderPlaylist() }
+              </Popover>
               <div
                 className="player-button player-volume-button"
                 onClick={ this.toggleMute }>
