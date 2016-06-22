@@ -10,6 +10,7 @@ import LocalStorageUtils from '../utils/LocalStorageUtils';
 import { CHANGE_TYPES } from '../constants/SongConstants';
 import { changeSong } from '../actions/player';
 import Popover from '../components/Popover';
+// import Playlist from '../components/Playlist';
 
 const propTypes = {
   dispatch: PropTypes.func.isRequired,
@@ -387,7 +388,14 @@ class Player extends Component {
   renderPlaylist() {
     const { dispatch, player, playlists, songs } = this.props;
 
-    return '点击列表！';
+    return (
+      <Playlist
+        dispatch={ dispatch }
+        player={ player }
+        playlists={ playlists }
+        songs={ songs }
+      />
+    )
   }
 
   render() {
