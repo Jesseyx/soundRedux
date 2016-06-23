@@ -10,7 +10,7 @@ import LocalStorageUtils from '../utils/LocalStorageUtils';
 import { CHANGE_TYPES } from '../constants/SongConstants';
 import { changeSong } from '../actions/player';
 import Popover from '../components/Popover';
-// import Playlist from '../components/Playlist';
+import Playlist from '../components/Playlist';
 
 const propTypes = {
   dispatch: PropTypes.func.isRequired,
