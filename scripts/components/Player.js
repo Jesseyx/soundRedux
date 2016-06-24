@@ -125,7 +125,25 @@ class Player extends Component {
   }
 
   handleKeyDown(e) {
+    const keyCode = e.keyCode || e.which;
+    const isInsideInput = e.target.tagName.toLowerCase().match(/input|textarea/);
+    if (isInsideInput) {
+      return;
+    }
 
+    if (keyCode === 32) {
+      // 空格键
+      e.preventDefault();
+      this.togglePlay();
+    } else if (keyCode === 37 || keyCode === 74) {
+      // 左箭头和 J 键
+      e.preventDefault();
+      this.changeSong(CHANGE_TYPES.PREV);
+    } else if (keyCode === 39 || keyCode === 75) {
+      // 右箭头和 K 键
+      e.preventDefault();
+      this.changeSong(CHANGE_TYPES.NEXT);
+    }
   }
 
   handleEnded() {
