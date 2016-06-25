@@ -8,11 +8,13 @@ import { initNavigator } from '../actions/navigator';
 import NavContainer from './NavContainer';
 import SongsContainer from './SongsContainer';
 import PlayerContainer from './PlayerContainer';
+import SongContainer from './SongContainer';
 
 const propTypes = {
   dispatch: PropTypes.func.isRequired,
-  isMobile: PropTypes.bool,
   height: PropTypes.number,
+  isMobile: PropTypes.bool,
+  path: PropTypes.array.isRequired,
   width: PropTypes.number
 }
 
@@ -27,7 +29,27 @@ class App extends Component {
 
   renderContent() {
     // do route
-    return <SongsContainer />
+    const { path } = this.props;
+    switch (path[0]) {
+      case 'songs':
+        switch (path.length) {
+          case 1:
+            return <SongsContainer />
+          case 2:
+            return <SongContainer />
+          default:
+            return null;
+        }
+
+      case 'users':
+        return null;
+
+      case 'me':
+        return null;
+
+      default:
+        return null;
+    }
   }
 
   render() {
@@ -58,13 +80,13 @@ App.propTypes = propTypes;
 function mapStateToProps(state, ownProps) {
   const { environment, navigator } = state;
   const { isMobile, height, width } = environment;
-  const { path } = navigator;
+  const { path } = navigator.route;
 
   return {
-    isMobile,
     height,
-    width,
+    isMobile,
     path,
+    width,
   }
 }
 
