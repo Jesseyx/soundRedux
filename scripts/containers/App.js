@@ -20,7 +20,7 @@ const propTypes = {
 
 class App extends Component {
   componentDidMount() {
-    // 组件开始装载前
+    // 组件装载以后触发
     const { dispatch } = this.props;
     dispatch(initEnvironment());
     dispatch(initAuth());

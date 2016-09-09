@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "sound redux",
   "scripts": {
-    "start": "webpack-dev-server --progress --colors --hot --content-base ./server/public --config ./webpack.config.js"
+    "start": "webpack-dev-server --progress --colors --hot --inline --content-base ./server/public --config ./webpack.config.js"
   },
   "repository": {
     "type": "git",
