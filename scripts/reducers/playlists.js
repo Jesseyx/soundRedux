@@ -26,6 +26,11 @@ function playlist(state = initialPlaylistState, action) {
         futureUrl: action.futureUrl,
       });
 
+    case types.APPEND_LIKE:
+      return Object.assign({}, state, {
+        items: [action.songId, ...state.items],
+      });
+
     default:
       return state;
   }
@@ -50,6 +55,11 @@ export default function playlists(state = initialState, action) {
     case types.RECEIVE_SONGS:
       return Object.assign({}, state, {
         [action.playlist]: playlist(state[action.playlist], action),
+      });
+
+    case types.APPEND_LIKE:
+      return Object.assign({}, state, {
+        [LIKES_PLAYLIST_KEY]: playlist(state[LIKES_PLAYLIST_KEY], action)
       });
 
     default:

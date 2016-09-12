@@ -1,4 +1,17 @@
 import React, { Component, PropTypes } from 'react';
+import classNames from 'classnames';
+
+import { fetchSongIfNeeded } from '../actions/songs';
+import { getImageUrl } from '../utils/SongUtils';
+import { IMAGE_SIZES } from '../constants/SongConstants';
+import { playSong } from '../actions/player';
+import { addCommas } from '../utils/FormatUtils';
+import { SONG_PLAYLIST_SUFFIX } from '../constants/PlaylistConstants';
+
+import Spinner from '../components/Spinner';
+import TogglePlayButtonContainer from '../containers/TogglePlayButtonContainer';
+import Link from '../components/Link';
+import SongHeartCount from '../components/SongHeartCount';
 
 const propTypes = {
   authed: PropTypes.object.isRequired,
@@ -14,60 +27,113 @@ const propTypes = {
 }
 
 class Song extends Component {
+  componentWillMount() {
+    const { dispatch, songId } = this.props;
+    dispatch(fetchSongIfNeeded(songId));
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { dispatch, songId } = this.props;
+    if (nextProps.songId !== songId) {
+      dispatch(fetchSongIfNeeded());
+    }
+  }
+
+  playSong(i) {
+    const { dispatch, songId, songs } = this.props;
+    const song = songs[songId];
+
+    if (!song) {
+      return;
+    }
+
+    dispatch(playSong(song.title + SONG_PLAYLIST_SUFFIX, i));
+  }
+
+  renderTogglePlayButton() {
+    const { playingSongId, songId } = this.props;
+    const isActive = playingSongId && playingSongId === songId;
+    const playSongFunc = this.playSong.bind(this, 0);
+
+    if (isActive) {
+      return <TogglePlayButtonContainer />;
+    }
+
+    return (
+        <div className="toggle-play-button" onClick={ playSongFunc }>
+          <i className="toggle-play-button-icon ion-ios-play" />
+        </div>
+    );
+  }
+
   render() {
+    const { authed, dispatch, player, playingSongId, songId, songs, users } = this.props;
+    const song = songs[songId];
+    if (!song) {
+      return <Spinner />;
+    }
+
+    const isActive = Boolean(playingSongId && playingSongId === songId);
+    const image = getImageUrl(song.artwork_url, IMAGE_SIZES.LARGE);
+    const playSongFunc = this.playSong.bind(this, 0);
+    const user = song.user_id in users ? users[song.user_id] : {};
+
     return (
       <div className="container">
         <div className="content">
           <div className="grid">
             <div className="col-7-10">
-              <div className="song card">
+              <div className={ classNames({
+                song: true,
+                card: true,
+                active: isActive,
+              })}>
                 <div className="song-main">
                   <div className="song-detail">
-                    <div className="song-image" style={{ backgroundImage: 'url(https://i1.sndcdn.com/artworks-000041124475-2lu7vg-t300x300.jpg)' }} />
+                    <div
+                        className="song-image"
+                        style={{ backgroundImage: `url(${ image })` }}
+                    >
+                      { this.renderTogglePlayButton() }
+                    </div>
                     <div className="song-info">
                       <div className="song-title">
-                        Lana Del Rey - Summertime Sadness (Cedric Gervais Remix)
+                        { song.title }
                       </div>
 
                       <div className="song-user">
-                        <div className="song-user-image" style={{ backgroundImage: 'url(https://i1.sndcdn.com/avatars-000217622831-lwr9mn-large.jpg)' }} />
-                        <a className="song-username" href="/#/users/5614319" title="">House</a>
+                        <div
+                            className="song-user-image"
+                            style={{ backgroundImage: `url(${ getImageUrl(user.avatar_url) })` }}
+                        />
+                        <Link
+                            className="song-username"
+                            dispatch={ dispatch }
+                            route={{ path: ['users', user.id] }}
+                        >
+                          { user.username }
+                        </Link>
                       </div>
 
                       <div className="song-stats">
+                        <SongHeartCount
+                            authed={ authed }
+                            count={ song.likes_count ? song.likes_count : song.favoritings_count }
+                            dispatch={ dispatch }
+                            songId={ songId }
+                        />
                         <div className="song-stat">
                           <i className="icon ion-play" />
-                          <span>21,381,175</span>
+                          <span>{ addCommas(song.playback_count) }</span>
                         </div>
                         <div className="song-stat">
                           <i className="icon ion-chatbubble" />
-                          <span>10,342</span>
+                          <span>{ addCommas(song.comment_count) }</span>
                         </div>
                       </div>
 
                       <div className="song-description">
-                        ▶ Cedric Merchandise - bit.ly/CedricEFam
-
-                        Buy it Now: http://smarturl.it/SummertimeCedric
-                        ••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
-                        Follow Cedric Gervais:
-                        http://www.cedricgervais.com/
-                        http://facebook.com/cedgerv
-                        http://twitter.com/cedricgervais
-                        SC: http://soundcloud.com/cedricgervais
-
-                        Follow Lana Del Rey:
-                        http://www.lanadelrey.com/
-
-                        Follow Spinnin' Records:
-                        http://www.spinninrecords.com/
-                        https://www.facebook.com/SpinninRecords
-
-                        http://www.House.NET
-                        •••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
-                        Send all demos to dropbox@house.NET to have your track featured!
-                        •••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
-                        Sounds like: Avicii, David Guetta, Calvin Harris, Nicky Romero, Afrojack, Chuckie, Skrillex, Zedd, Steve Aoki, Showtek, Kill The Noise, Porter Robinson, Dada Life, Wolfgang Gartner, Sasha, Bingo Players, R3hab, DeadMau5, Above & Beyond, John Dahlbeck, Progressive, Dance Music, EDM, Bass, Electro, Electro House, Complextro, Moombahton, OWSLA, Ultra, Armada, Dim Mak, Spinnin' Records, Anjunabeats, Big Beat, Wall Recordings and Mau5trap
+                        { song.description }
                       </div>
                     </div>
                   </div>

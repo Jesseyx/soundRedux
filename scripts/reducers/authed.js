@@ -38,6 +38,13 @@ export default function authed(state = initialState, action) {
         followings: action.users,
       });
 
+    case types.SET_LIKE:
+      return Object.assign({}, state, {
+        likes: Object.assign({}, state.likes, {
+          [action.songId]: action.liked,
+        }),
+      });
+
     default:
       return state;
   }

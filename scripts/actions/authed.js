@@ -8,6 +8,7 @@ import { AUTHED_PLAYLIST_SUFFIX } from '../constants/PlaylistConstants';
 import { songSchema, userSchema, playlistSchema } from '../constants/Schemes';
 import { receiveSongs } from '../actions/playlists';
 import { SC_API_URL } from '../constants/Api';
+import { changePlayingSong } from '../actions/player';
 
 const COOKIE_PATH = 'accessToken';
 
@@ -190,4 +191,47 @@ export function logoutUser() {
     Cookies.remove(COOKIE_PATH);
     return dispatch(resetAuthed());
   }
+}
+
+export function toggleLike(songId) {
+    return (dispatch, getState) => {
+        const { authed, player } = getState();
+        const { likes } = authed;
+        const { selectedPlaylists, currentSongIndex } = player;
+        const liked = songId in likes && likes[songId] === 1 ? 0 : 1;
+
+        if (!(songId in likes)) {
+            // 收藏列表中无该 id, 添加到本地状态中
+            dispatch(appendLike(songId));
+            if (currentSongIndex !== null
+                && selectedPlaylists[selectedPlaylists.length - 1] === `likes${ AUTHED_PLAYLIST_SUFFIX }`) {
+                dispatch(changePlayingSong(currentSongIndex + 1));
+            }
+        }
+
+        dispatch(setLike(songId, liked));
+        syncLike(authed.accessToken, songId, liked);
+    }
+}
+
+function appendLike(songId) {
+    return {
+        type: types.APPEND_LIKE,
+        songId,
+    }
+}
+
+function setLike(songId, liked) {
+    return {
+        type: types.SET_LIKE,
+        liked,
+        songId,
+    }
+}
+
+function syncLike(accessToken, songId, liked) {
+    fetch(
+        `${ SC_API_URL }/me/favorites/${ songId }?oauth_token=${ accessToken }`,
+        { method: liked ? 'put' : 'delete' }
+    );
 }

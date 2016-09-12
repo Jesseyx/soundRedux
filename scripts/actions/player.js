@@ -23,7 +23,7 @@ function changeSelectedPlaylists(playlists, playlist) {
   }
 }
 
-function changePlayingSong(songIndex) {
+export function changePlayingSong(songIndex) {
   return {
     type: types.CHANGE_PLAYING_SONG,
     songIndex,

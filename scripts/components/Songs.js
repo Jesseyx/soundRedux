@@ -32,7 +32,7 @@ class Songs extends Component {
     const nextPlaylist = nextProps.playlist;
 
     if (playlist !== nextPlaylist) {
-      if (!(nextPlaylist in playlists) || playlists[nextPlaylist].items.langth === 0) {
+      if (!(nextPlaylist in playlists) || playlists[nextPlaylist].items.length === 0) {
         // 如果列表不存在或者为空
         dispatch(fetchSongsIfNeeded(nextPlaylist));
       }
