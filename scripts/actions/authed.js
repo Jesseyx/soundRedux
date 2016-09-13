@@ -201,7 +201,7 @@ export function toggleLike(songId) {
         const liked = songId in likes && likes[songId] === 1 ? 0 : 1;
 
         if (!(songId in likes)) {
-            // 收藏列表中无该 id, 添加到本地状态中
+            // 收藏列表中无该 id, 添加到本地状态中， 这里是添加到 playlists 中
             dispatch(appendLike(songId));
             if (currentSongIndex !== null
                 && selectedPlaylists[selectedPlaylists.length - 1] === `likes${ AUTHED_PLAYLIST_SUFFIX }`) {
@@ -209,6 +209,7 @@ export function toggleLike(songId) {
             }
         }
 
+        // 这个是添加到 authed 中
         dispatch(setLike(songId, liked));
         syncLike(authed.accessToken, songId, liked);
     }
