@@ -9,6 +9,7 @@ import NavContainer from './NavContainer';
 import SongsContainer from './SongsContainer';
 import PlayerContainer from './PlayerContainer';
 import SongContainer from './SongContainer';
+import UserContainer from './UserContainer';
 
 const propTypes = {
   dispatch: PropTypes.func.isRequired,
@@ -42,7 +43,7 @@ class App extends Component {
         }
 
       case 'users':
-        return null;
+        return <UserContainer />;
 
       case 'me':
         return null;
