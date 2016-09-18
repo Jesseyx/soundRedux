@@ -10,6 +10,7 @@ import SongsContainer from './SongsContainer';
 import PlayerContainer from './PlayerContainer';
 import SongContainer from './SongContainer';
 import UserContainer from './UserContainer';
+import ModalContainer from './ModalContainer';
 
 const propTypes = {
   dispatch: PropTypes.func.isRequired,
@@ -71,6 +72,7 @@ class App extends Component {
         <NavContainer />
         { this.renderContent() }
         <PlayerContainer />
+        <ModalContainer />
       </div>
     )
   }

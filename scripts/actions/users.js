@@ -122,7 +122,7 @@ function fetchUserProfiles(userId) {
     return dispatch => fetch(constructUserProfilesUrl(userId))
         .then(response => response.json())
         .then(json => {
-            const entities = { users: { [userId]: { profile: json } } };
+            const entities = { users: { [userId]: { profiles: json } } };
             dispatch(receiveUserProfiles(entities));
 
             console.group('-------------------------------------');

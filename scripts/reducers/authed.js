@@ -45,6 +45,13 @@ export default function authed(state = initialState, action) {
         }),
       });
 
+    case types.SET_FOLLOWING:
+      return Object.assign({}, state, {
+        followings: Object.assign({}, state.followings, {
+          [action.userId]: action.following,
+        }),
+      });
+
     default:
       return state;
   }

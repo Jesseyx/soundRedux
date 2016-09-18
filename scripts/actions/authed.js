@@ -236,3 +236,29 @@ function syncLike(accessToken, songId, liked) {
         { method: liked ? 'put' : 'delete' }
     );
 }
+
+export function toggleFollow(userId) {
+    return (dispatch, getState) => {
+        const { authed } = getState();
+        const { followings } = authed;
+        const following = userId in followings && followings[userId] === 1 ? 0 : 1;
+
+        dispatch(setFollowing(userId, following));
+        syncFollowing(authed.accessToken, userId, following);
+    }
+}
+
+function setFollowing(userId, following) {
+    return {
+        type: types.SET_FOLLOWING,
+        following,
+        userId,
+    }
+}
+
+function syncFollowing(accessToken, userId, following) {
+    fetch(
+        `${ SC_API_URL }/me/followings/${ userId }?oauth_token=${ accessToken }`,
+        { method: following ? 'put' : 'delete' }
+    );
+}

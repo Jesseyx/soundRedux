@@ -5,6 +5,7 @@ import environment from './environment';
 import navigator from './navigator';
 import player from './player';
 import playlists from './playlists';
+import modal from './modal';
 
 const rootReducer = combineReducers({
   authed,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   navigator,
   player,
   playlists,
+  modal,
 })
 
 export default rootReducer;

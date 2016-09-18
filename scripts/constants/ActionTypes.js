@@ -43,3 +43,9 @@ export const REQUEST_USER = 'REQUEST_USER';
 export const RECEIVE_USER = 'RECEIVE_USER';
 export const RECEIVE_USER_FOLLOWINGS = 'RECEIVE_USER_FOLLOWINGS';
 export const RECEIVE_USER_PROFILES = 'RECEIVE_USER_PROFILES';
+
+// modal
+export const CHANGE_MODAL = 'CHANGE_MODAL';
+
+// following
+export const SET_FOLLOWING = 'SET_FOLLOWING';
