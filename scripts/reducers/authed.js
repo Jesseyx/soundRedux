@@ -2,10 +2,11 @@ import * as types from '../constants/ActionTypes';
 
 const initialState = {
   accessToken: null,
-  user: null,
-  likes: {},
-  playlists: [],
   followings: {},
+  likes: {},
+  newStreamSongs: [],
+  playlists: [],
+  user: null,
 }
 
 export default function authed(state = initialState, action) {
@@ -50,6 +51,11 @@ export default function authed(state = initialState, action) {
         followings: Object.assign({}, state.followings, {
           [action.userId]: action.following,
         }),
+      });
+
+    case types.UNSHIFT_NEW_STREAM_SONGS:
+      return Object.assign({}, state, {
+        newStreamSongs: [],
       });
 
     default:

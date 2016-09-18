@@ -49,3 +49,7 @@ export const CHANGE_MODAL = 'CHANGE_MODAL';
 
 // following
 export const SET_FOLLOWING = 'SET_FOLLOWING';
+
+// new stream songs
+export const UNSHIFT_NEW_STREAM_SONGS = 'UNSHIFT_NEW_STREAM_SONGS';
+export const REMOVE_UNLIKED_SONGS = 'REMOVE_UNLIKED_SONGS';

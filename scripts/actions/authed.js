@@ -262,3 +262,17 @@ function syncFollowing(accessToken, userId, following) {
         { method: following ? 'put' : 'delete' }
     );
 }
+
+export function addNewStreamSongsToPlaylist() {
+    return (dispatch, getState) => {
+        const { authed } = getState();
+        dispatch(unshiftNewStreamSongs(authed.newStreamSongs.slice()));
+    }
+}
+
+function unshiftNewStreamSongs(songs) {
+    return {
+        type: types.UNSHIFT_NEW_STREAM_SONGS,
+        songs,
+    }
+}

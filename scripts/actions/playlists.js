@@ -1,8 +1,12 @@
 import { normalize, arrayOf } from 'normalizr';
+
 import * as types from '../constants/ActionTypes';
 import { songSchema } from '../constants/Schemes';
 import { GENRES_MAP } from '../constants/SongConstants';
 import { constructUrl } from '../utils/SongUtils';
+import { AUTHED_PLAYLIST_SUFFIX } from '../constants/PlaylistConstants';
+import { getPlayingPlaylist } from '../utils/PlayerUtils';
+import { changePlayingSong } from '../actions/player';
 
 export function fetchSongs(url, playlist) {
   return (dispatch, getState) => {
@@ -102,4 +106,30 @@ function getNextUrl(playlists, playlist) {
   }
 
   return activePlaylist.nextUrl;
+}
+
+export function removeUnlikedSongsPre() {
+    return (dispatch, getState) => {
+        const LIKES_PLAYLIST_KEY = `likes${ AUTHED_PLAYLIST_SUFFIX }`;
+        const { authed, player, playlists } = getState();
+        const { currentSongIndex } = player;
+        const playingPlaylist = getPlayingPlaylist(player);
+
+        const likedSongs = playlists[LIKES_PLAYLIST_KEY].items
+            .filter(songId => songId in authed.likes && authed.likes[songId] === 1);
+
+        if (playingPlaylist === LIKES_PLAYLIST_KEY
+            && currentSongIndex >= likedSongs.length) {
+            dispatch(changePlayingSong(null));
+        }
+
+        dispatch(removeUnlikedSongs(likedSongs));
+    }
+}
+
+function removeUnlikedSongs(songs) {
+    return {
+        type: types.REMOVE_UNLIKED_SONGS,
+        songs,
+    }
 }

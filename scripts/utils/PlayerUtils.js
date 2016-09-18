@@ -9,3 +9,11 @@ export function getPlayingSongId(player, playlists) {
 
   return null;
 }
+
+export function getPlayingPlaylist(player) {
+  if (player.selectedPlaylists.length === 0) {
+    return null;
+  }
+
+  return player.selectedPlaylists[player.selectedPlaylists.length - 1];
+}

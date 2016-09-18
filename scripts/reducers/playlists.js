@@ -31,6 +31,16 @@ function playlist(state = initialPlaylistState, action) {
         items: [action.songId, ...state.items],
       });
 
+    case types.UNSHIFT_NEW_STREAM_SONGS:
+      return Object.assign({}, state, {
+        items: [...action.songs, ...state.items],
+      });
+
+    case types.REMOVE_UNLIKED_SONGS:
+      return Object.assign({}, state, {
+        items: [...action.songs],
+      });
+
     default:
       return state;
   }
@@ -60,6 +70,16 @@ export default function playlists(state = initialState, action) {
     case types.APPEND_LIKE:
       return Object.assign({}, state, {
         [LIKES_PLAYLIST_KEY]: playlist(state[LIKES_PLAYLIST_KEY], action)
+      });
+
+    case types.UNSHIFT_NEW_STREAM_SONGS:
+      return Object.assign({}, state, {
+        [STREAM_PLAYLIST_KEY]: playlist(state[STREAM_PLAYLIST_KEY], action),
+      });
+
+    case types.REMOVE_UNLIKED_SONGS:
+      return Object.assign({}, state, {
+        [LIKES_PLAYLIST_KEY]: playlist(state[LIKES_PLAYLIST_KEY], action),
       });
 
     default:
