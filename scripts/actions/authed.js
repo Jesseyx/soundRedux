@@ -13,184 +13,180 @@ import { changePlayingSong } from '../actions/player';
 const COOKIE_PATH = 'accessToken';
 
 export function initAuth() {
-  return dispatch => {
-    const accessToken = Cookies.get(COOKIE_PATH);
-    if (accessToken) {
-      return dispatch(authUser(accessToken, false));
+    return dispatch => {
+        const accessToken = Cookies.get(COOKIE_PATH);
+        if (accessToken) {
+            return dispatch(authUser(accessToken, false));
+        }
+        return null;
     }
-    return null;
-  }
 }
 
 function authUser(accessToken, shouldShowStream = true) {
-  return dispatch =>
-    dispatch(fetchAuthedUser(accessToken, shouldShowStream));
+    return dispatch =>
+        dispatch(fetchAuthedUser(accessToken, shouldShowStream));
 }
 
 function fetchAuthedUser(accessToken, shouldShowStream) {
-  return dispatch =>
-    fetch(`${ SC_API_URL }/me?oauth_token=${ accessToken }`)
-      .then(response => response.json())
-      .then(json => dispatch(receiveAuthedUserPre(accessToken, json, shouldShowStream)))
-      .catch(err => { throw err });
+    return dispatch => fetch(`${ SC_API_URL }/me?oauth_token=${ accessToken }`)
+        .then(response => response.json())
+        .then(json => dispatch(receiveAuthedUserPre(accessToken, json, shouldShowStream)))
+        .catch(err => { throw err });
 }
 
 function fetchStream(accessToken) {
-  return dispatch => {
-    dispatch(fetchSongs(
-      `${ SC_API_URL }/me/activities/tracks/affiliated?limit=50&oauth_token=${ accessToken }`,
-      `stream${ AUTHED_PLAYLIST_SUFFIX }`
-    ))
-  }
+    return dispatch => {
+        dispatch(fetchSongs(
+            `${ SC_API_URL }/me/activities/tracks/affiliated?limit=50&oauth_token=${ accessToken }`,
+            `stream${ AUTHED_PLAYLIST_SUFFIX }`
+        ))
+    }
 }
 
 function fetchLikes(accessToken) {
-  return dispatch =>
-    fetch(`${ SC_API_URL }/me/favorites?oauth_token=${ accessToken }`)
-      .then(response => response.json())
-      .then(json => {
-        console.log('*********************** fetchLinks ***********************');
-        console.log(json);
-        const songs = json.filter(song => song.streamable);
-        const normalized = normalize(songs, arrayOf(songSchema));
-        console.log('*********************** fetchLinks Normailizr ***********************');
-        console.log(normalized);
-        const likes = normalized.result
-          .reduce((obj, songId) => Object.assign({}, obj, { [songId]: 1 }), {});
-        dispatch(receiveLikes(likes));
-        dispatch(receiveSongs(
-          normalized.entities,
-          normalized.result,
-          `likes${ AUTHED_PLAYLIST_SUFFIX }`,
-          null
-        ));
-      })
-      .catch(err => { throw err; })
+    return dispatch => fetch(`${ SC_API_URL }/me/favorites?oauth_token=${ accessToken }`)
+        .then(response => response.json())
+        .then(json => {
+            console.log('*********************** fetchLinks ***********************');
+            console.log(json);
+            const songs = json.filter(song => song.streamable);
+            const normalized = normalize(songs, arrayOf(songSchema));
+            console.log('*********************** fetchLinks Normailizr ***********************');
+            console.log(normalized);
+            const likes = normalized.result
+                .reduce((obj, songId) => Object.assign({}, obj, { [songId]: 1 }), {});
+            dispatch(receiveLikes(likes));
+            dispatch(receiveSongs(
+                normalized.entities,
+                normalized.result,
+                `likes${ AUTHED_PLAYLIST_SUFFIX }`,
+                null
+            ));
+        })
+        .catch(err => { throw err; })
 }
 
 function fetchPlaylists(accessToken) {
-  return dispatch =>
-    fetch(`${ SC_API_URL }/me/playlists?oauth_token=${ accessToken }`)
-      .then(response => response.json())
-      .then(json => {
-        console.log('*********************** fetchPlaylists ***********************');
-        console.log(json);
-        const normalized = normalize(json, arrayOf(playlistSchema));
-        console.log('*********************** fetchPlaylists normalized ***********************');
-        console.log(normalized);
-        dispatch(receiveAuthedPlaylists(normalized.result, normalized.entities));
-        normalized.result.forEach(playlistId => {
-          const playlist = normalized.entities.playlists[playlistId];
-          dispatch(receiveSongs(
-            {},
-            playlist.tracks,
-            playlist.title + AUTHED_PLAYLIST_SUFFIX,
-            null
-          ))
+    return dispatch => fetch(`${ SC_API_URL }/me/playlists?oauth_token=${ accessToken }`)
+        .then(response => response.json())
+        .then(json => {
+            console.log('*********************** fetchPlaylists ***********************');
+            console.log(json);
+            const normalized = normalize(json, arrayOf(playlistSchema));
+            console.log('*********************** fetchPlaylists normalized ***********************');
+            console.log(normalized);
+            dispatch(receiveAuthedPlaylists(normalized.result, normalized.entities));
+            normalized.result.forEach(playlistId => {
+                const playlist = normalized.entities.playlists[playlistId];
+                dispatch(receiveSongs(
+                    {},
+                    playlist.tracks,
+                    playlist.title + AUTHED_PLAYLIST_SUFFIX,
+                    null
+                ))
+            })
         })
-      })
-      .catch(err => { throw err; })
+        .catch(err => { throw err; })
 }
 
 function fetchFollowings(accessToken) {
-  return dispatch =>
-    fetch(`${ SC_API_URL }/me/followings?oauth_token=${ accessToken }`)
-      .then(response => response.json())
-      .then(json => {
-        console.log('*********************** fetchFollowings ***********************');
-        console.log(json);
-        return normalize(json.collection, arrayOf(userSchema));
-      })
-      .then(normalized => {
-        console.log('*********************** fetchFollowings normalized ***********************');
-        console.log(normalized);
+    return dispatch => fetch(`${ SC_API_URL }/me/followings?oauth_token=${ accessToken }`)
+        .then(response => response.json())
+        .then(json => {
+            console.log('*********************** fetchFollowings ***********************');
+            console.log(json);
+            return normalize(json.collection, arrayOf(userSchema));
+        })
+        .then(normalized => {
+            console.log('*********************** fetchFollowings normalized ***********************');
+            console.log(normalized);
 
-        const users = normalized.result
-          .reduce((obj, userId) => Object.assign({}, obj, { [userId]: 1, }), {});
-        dispatch(receiveAuthedFollowings(users, normalized.entities));
-      })
-      .catch(err => { throw err; })
+            const users = normalized.result
+                .reduce((obj, userId) => Object.assign({}, obj, { [userId]: 1, }), {});
+            dispatch(receiveAuthedFollowings(users, normalized.entities));
+        })
+        .catch(err => { throw err; })
 }
 
 function receiveAuthedUserPre(accessToken, user, shouldShowStream) {
-  console.log(user);
-  return dispatch => {
-    dispatch(receiveAccessToken(accessToken));
-    dispatch(receiveAuthedUser(user));
-    dispatch(fetchStream(accessToken));
-    dispatch(fetchLikes(accessToken));
-    dispatch(fetchPlaylists(accessToken));
-    dispatch(fetchFollowings(accessToken));
-    if (shouldShowStream) {
-      //
+    console.log(user);
+    return dispatch => {
+        dispatch(receiveAccessToken(accessToken));
+        dispatch(receiveAuthedUser(user));
+        dispatch(fetchStream(accessToken));
+        dispatch(fetchLikes(accessToken));
+        dispatch(fetchPlaylists(accessToken));
+        dispatch(fetchFollowings(accessToken));
+        if (shouldShowStream) {
+            //
+        }
     }
-  }
 }
 
 function receiveAccessToken(accessToken) {
-  return {
-    type: types.RECEIVE_ACCESS_TOKEN,
-    accessToken,
-  }
+    return {
+        type: types.RECEIVE_ACCESS_TOKEN,
+        accessToken,
+    }
 }
 
 function receiveAuthedUser(user) {
-  return {
-    type: types.RECEIVE_AUTHED_USER,
-    user,
-  }
+    return {
+        type: types.RECEIVE_AUTHED_USER,
+        user,
+    }
 }
 
 function resetAuthed() {
-  return {
-    type: types.RESET_AUTHED,
-  }
+    return {
+        type: types.RESET_AUTHED,
+    }
 }
 
 function receiveLikes(likes) {
-  return {
-    type: types.RECEIVE_LIKES,
-    likes,
-  }
+    return {
+        type: types.RECEIVE_LIKES,
+        likes,
+    }
 }
 
 function receiveAuthedPlaylists(playlists, entities) {
-  return {
-    type: types.RECEIVE_AUTHED_PLAYLISTS,
-    playlists,
-    entities,
-  }
+    return {
+        type: types.RECEIVE_AUTHED_PLAYLISTS,
+        playlists,
+        entities,
+    }
 }
 
 function receiveAuthedFollowings(users, entities) {
-  return {
-    type: types.RECEIVE_AUTHED_FOLLOWINGS,
-    users,
-    entities
-  }
+    return {
+        type: types.RECEIVE_AUTHED_FOLLOWINGS,
+        users,
+        entities
+    }
 }
 
 export function loginUser(shouldShowStream = true) {
-  return dispatch => {
-    SC.initialize({
-      client_id: CLIENT_ID,
-      redirect_uri: `${ window.location.protocol }//${ window.location.host}/api/callback`
-    });
+    return dispatch => {
+        SC.initialize({
+            client_id: CLIENT_ID,
+            redirect_uri: `${ window.location.protocol }//${ window.location.host}/api/callback`
+        });
 
-    SC.connect().then(authObj => {
-      console.log(authObj);
-      Cookies.set(COOKIE_PATH, authObj.oauth_token);
-      dispatch(authUser(authObj.oauth_token, shouldShowStream));
-    })
-    .catch(err => { throw err });
-  }
+        SC.connect().then(authObj => {
+            console.log(authObj);
+            Cookies.set(COOKIE_PATH, authObj.oauth_token);
+            dispatch(authUser(authObj.oauth_token, shouldShowStream));
+        })
+        .catch(err => { throw err });
+    }
 }
 
 export function logoutUser() {
-  return (dispatch, getState) => {
-    Cookies.remove(COOKIE_PATH);
-    return dispatch(resetAuthed());
-  }
+    return (dispatch, getState) => {
+        Cookies.remove(COOKIE_PATH);
+        return dispatch(resetAuthed());
+    }
 }
 
 export function toggleLike(songId) {

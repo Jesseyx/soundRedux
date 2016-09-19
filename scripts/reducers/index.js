@@ -8,13 +8,13 @@ import playlists from './playlists';
 import modal from './modal';
 
 const rootReducer = combineReducers({
-  authed,
-  entities,
-  environment,
-  navigator,
-  player,
-  playlists,
-  modal,
+    authed,
+    entities,
+    environment,
+    navigator,
+    player,
+    playlists,
+    modal,
 })
 
 export default rootReducer;

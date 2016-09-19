@@ -4,81 +4,81 @@ import Link from './Link';
 
 const DAYS = [7, 30, 90];
 const propTypes = {
-  dispatch: PropTypes.func.isRequired,
-  playlist: PropTypes.string.isRequired,
-  time: PropTypes.number,
+    dispatch: PropTypes.func.isRequired,
+    playlist: PropTypes.string.isRequired,
+    time: PropTypes.number,
 }
 
 class Toolbar extends Component {
-  renderGenres() {
-    const { dispatch, playlist, time } = this.props;
-    const genre = playlist.split(' - ')[0];
+    renderGenres() {
+        const { dispatch, playlist, time } = this.props;
+        const genre = playlist.split(' - ')[0];
 
-    return GENRES.map(g => {
-      const route = {
-        path: ['songs'],
-        query: {
-          q: g,
-          t: time,
-        }
-      }
+        return GENRES.map(g => {
+            const route = {
+                path: ['songs'],
+                query: {
+                    q: g,
+                    t: time,
+                }
+            }
 
-      return (
-        <Link
-          className={ `toolbar-item toolbar-genre${ g === genre ? ' active' : '' }` }
-          dispatch={ dispatch }
-          route={ route }
-          key={ g }
-        >
-          { g }
-        </Link>
-      )
-    });
-  }
+            return (
+                <Link
+                    className={ `toolbar-item toolbar-genre${ g === genre ? ' active' : '' }` }
+                    dispatch={ dispatch }
+                    route={ route }
+                    key={ g }
+                >
+                    { g }
+                </Link>
+            )
+        });
+    }
 
-  renderTimes() {
-    const { dispatch, playlist, time } = this.props;
-    const genre = playlist.split(' - ')[0];
+    renderTimes() {
+        const { dispatch, playlist, time } = this.props;
+        const genre = playlist.split(' - ')[0];
 
-    return DAYS.map(t => {
-      const route = {
-        path: ['songs'],
-        query: {
-          q: genre,
-          t: (t === time ? null : t),
-        }
-      }
+        return DAYS.map(t => {
+            const route = {
+                path: ['songs'],
+                query: {
+                    q: genre,
+                    t: (t === time ? null : t),
+                }
+            }
 
-      return (
-        <Link
-          className={ `toolbar-time${ t === time ? ' active' : '' }` }
-          dispatch={ dispatch }
-          route={ route }
-          key={ t }
-        >
-          { `${ t } days` }
-        </Link>
-      )
-    })
-  }
+            return (
+                <Link
+                    className={ `toolbar-time${ t === time ? ' active' : '' }` }
+                    dispatch={ dispatch }
+                    route={ route }
+                    key={ t }
+                >
+                    { `${ t } days` }
+                </Link>
+            )
+        })
+    }
 
-  render() {
-    return (
-      <div className="toolbar">
-        <div className="container">
-          <div className="toolbar-items">
-            { this.renderGenres() }
+    render() {
+        return (
+            <div className="toolbar">
+                <div className="container">
+                    <div className="toolbar-items">
+                        { this.renderGenres() }
 
-            <div className="toolbar-item toolbar-filter toolbar-times">
-              <i className="icon ion-funnel"></i>
+                        <div className="toolbar-item toolbar-filter toolbar-times">
+                            <i className="icon ion-funnel"></i>
 
-              { this.renderTimes() }
+                            { this.renderTimes() }
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
+        )
+    }
 }
 
 Toolbar.propTypes = propTypes;

@@ -6,13 +6,13 @@ import rootReducer from '../reducers/index';
 // const createStoreWithMiddleware = applyMiddleware(thunkMiddleware)(createStore);
 
 export default function configureStore(initialState) {
-  // const store = createStoreWithMiddleware(rootReducer, initialState);
-  // this is an other way to create store
-  const store = createStore(
-    rootReducer,
-    initialState,
-    compose(applyMiddleware(thunkMiddleware, loggerMiddleware()))
-  )
+    // const store = createStoreWithMiddleware(rootReducer, initialState);
+    // this is an other way to create store
+    const store = createStore(
+        rootReducer,
+        initialState,
+        compose(applyMiddleware(thunkMiddleware, loggerMiddleware()))
+    )
 
-  return store;
+    return store;
 }

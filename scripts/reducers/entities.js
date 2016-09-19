@@ -1,15 +1,15 @@
 import merge from 'lodash/merge';
 
 const initialState = {
-  songs: {},
-  users: {},
-  playlists: {},
+    songs: {},
+    users: {},
+    playlists: {},
 }
 
 export default function entities(state = initialState, action) {
-  if (action.entities) {
-    return merge({}, state, action.entities);
-  }
+    if (action.entities) {
+        return merge({}, state, action.entities);
+    }
 
-  return state;
+    return state;
 }
