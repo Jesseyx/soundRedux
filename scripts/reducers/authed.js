@@ -58,6 +58,11 @@ export default function authed(state = initialState, action) {
                 newStreamSongs: [],
             });
 
+        case types.RECEIVE_NEW_STREAM_SONGS:
+            return Object.assign({}, state, {
+                newStreamSongs: [...action.songs, ...state.newStreamSongs],
+            });
+
         default:
             return state;
     }

@@ -1,9 +1,9 @@
 import merge from 'lodash/merge';
 
 const initialState = {
+    playlists: {},
     songs: {},
     users: {},
-    playlists: {},
 }
 
 export default function entities(state = initialState, action) {

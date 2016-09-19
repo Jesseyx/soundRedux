@@ -41,6 +41,11 @@ function playlist(state = initialPlaylistState, action) {
                 items: [...action.songs],
             });
 
+        case types.RECEIVE_NEW_STREAM_SONGS:
+            return Object.assign({}, state, {
+                futureUrl: action.futureUrl,
+            });
+
         default:
             return state;
     }
@@ -81,6 +86,18 @@ export default function playlists(state = initialState, action) {
             return Object.assign({}, state, {
                 [LIKES_PLAYLIST_KEY]: playlist(state[LIKES_PLAYLIST_KEY], action),
             });
+
+        case types.RECEIVE_NEW_STREAM_SONGS:
+            return Object.assign({}, state, {
+                [STREAM_PLAYLIST_KEY]: playlist(state[STREAM_PLAYLIST_KEY], action),
+            });
+
+        case types.RESET_AUTHED:
+            const resetedPlaylists = [...action.playlists, STREAM_PLAYLIST_KEY, LIKES_PLAYLIST_KEY];
+            const newState = resetedPlaylists
+                .reduce((obj, p) => merge({}, obj, { [p]: initialPlaylistState }), {});
+
+            return Object.assign({}, state, newState);
 
         default:
             return state;

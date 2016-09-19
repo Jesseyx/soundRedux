@@ -63,7 +63,7 @@ export function receiveSongs(entities, songs, playlist, nextUrl, futureUrl) {
         songs,
         playlist,
         nextUrl,
-        futureUrl
+        futureUrl,
     }
 }
 
@@ -84,7 +84,7 @@ export function fetchSongsIfNeeded(playlist) {
 function requestSongs(playlist) {
     return {
         type: types.REQUEST_SONGS,
-        playlist
+        playlist,
     }
 }
 
