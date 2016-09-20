@@ -1,7 +1,10 @@
 import React, { Component, PropTypes } from 'react';
+import classNames from 'classnames';
+
 import Link from './Link';
 import SongHeart from './SongHeart';
 import TogglePlayButtonContainer from '../containers/TogglePlayButtonContainer';
+
 import { IMAGE_SIZES} from '../constants/SongConstants';
 import { getImageUrl } from '../utils/SongUtils';
 import { formatSongTitle } from '../utils/FormatUtils';
@@ -29,20 +32,27 @@ class SongCard extends Component {
             </div>
         )
     }
+
     render() {
         const { authed, dispatch, isActive, song, user } = this.props;
         const image = getImageUrl(song.artwork_url, IMAGE_SIZES.LARGE);
+        const isLiked = Boolean(song.id in authed.likes && authed.likes[song.id] === 1);
 
         return (
-            <div className={ `card song-card${ isActive ? ' active' : '' }` }>
+            <div className={ classNames({
+                card: true,
+                'song-card': true,
+                active: isActive,
+            }) }>
                 <div className="song-card-image" style={{ backgroundImage: `url(${ image })` }}>
                     { this.renderTogglePlayButton() }
                 </div>
 
                 <div className="song-card-user clearfix">
-                    <img alt="User avatar"
-                             className="song-card-user-image"
-                             src={ getImageUrl(user.avatar_url) } />
+                    <img className="song-card-user-image"
+                         src={ getImageUrl(user.avatar_url) }
+                         alt="User avatar"
+                    />
                     <div className="song-card-details">
                         <Link
                             className="song-card-title"
@@ -66,7 +76,7 @@ class SongCard extends Component {
                             authed={ authed }
                             className="song-card-heart"
                             dispatch={ dispatch }
-                            isLiked={ false }
+                            isLiked={ isLiked }
                             songId={ song.id }
                         />
                     </div>

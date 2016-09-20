@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
+
 import { navigateTo } from '../actions/navigator';
 
 const propTypes = {
@@ -51,7 +52,7 @@ class NavSearch extends Component {
     render() {
         return (
             <div className="nav-search">
-                <i className="icon ion-search"></i>
+                <i className="icon ion-search" />
                 <input
                     className="nav-search-input"
                     type="text"

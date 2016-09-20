@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react';
-import { fetchSongsIfNeeded } from '../actions/playlists';
+
 import SongCard from './SongCard';
 import Spinner from './Spinner';
 import InfiniteScrollify from './InfiniteScrollify';
+
+import { fetchSongsIfNeeded } from '../actions/playlists';
 import { playSong } from '../actions/player';
 
 const propTypes = {
@@ -31,6 +33,7 @@ class SongCards extends Component {
         }
 
         this.onScroll = this.onScroll.bind(this);
+        this.getScrollState = this.getScrollState.bind(this);
     }
 
     componentDidMount() {

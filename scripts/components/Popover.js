@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
-import classnames from 'classnames';
+import classNames from 'classnames';
 
 const propTypes = {
     className: PropTypes.string,
-    children: PropTypes.node.isRequired
+    children: PropTypes.node.isRequired,
 }
 
 class Popover extends Component {
@@ -15,6 +15,7 @@ class Popover extends Component {
         }
         this.onOutsideClick = this.onOutsideClick.bind(this);
         this.toggleIsOpen = this.toggleIsOpen.bind(this);
+
         this.state = { isOpen: false };
     }
 
@@ -56,10 +57,10 @@ class Popover extends Component {
 
         return (
             <div
-                className={ classnames({
+                className={ classNames({
                     [className]: true,
-                    'popover': true,
-                    'open': isOpen === true
+                    popover: true,
+                    open: isOpen === true,
                 })}
                 onClick={ this.toggleIsOpen }
             >

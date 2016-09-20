@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+
 import Song from '../components/Song';
+
 import { getPlayingSongId } from '../utils/PlayerUtils';
 
 class SongContainer extends Component {

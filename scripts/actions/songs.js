@@ -1,4 +1,5 @@
 import { arrayOf, normalize } from 'normalizr';
+
 import * as types from '../constants/ActionTypes';
 import {
     constructSongUrl,
@@ -16,14 +17,18 @@ export function fetchSongIfNeeded(songId) {
 
         if (!(songId in songs) || songs[songId].waveform_url.indexOf('json') > -1) {
             dispatch(fetchSong(songId));
-        }
-    }
-}
+        } else {
+            const song = songs[songId];
+            const songPlaylistKey = song.title + SONG_PLAYLIST_SUFFIX;
 
-export function receiveSong(entities) {
-    return {
-        type: types.RECEIVE_SONG,
-        entities,
+            if (!(songPlaylistKey in playlists)) {
+                dispatch(receiveSongs(null, [songId], songPlaylistKey, null));
+            }
+
+            if (!('comments' in songs[songId])) {
+                dispatch(fetchSongData(songId, song.user_id, song.title));
+            }
+        }
     }
 }
 
@@ -55,6 +60,13 @@ function receiveSongPre(songId, entities) {
         dispatch(receiveSong(entities));
         dispatch(receiveSongs(entities, [songId], songTitle + SONG_PLAYLIST_SUFFIX, null));
         dispatch(fetchSongData(songId, userId, songTitle));
+    }
+}
+
+export function receiveSong(entities) {
+    return {
+        type: types.RECEIVE_SONG,
+        // entities,
     }
 }
 

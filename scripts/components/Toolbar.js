@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import { GENRES } from '../constants/SongConstants';
+
 import Link from './Link';
+
+import { GENRES } from '../constants/SongConstants';
 
 const DAYS = [7, 30, 90];
 const propTypes = {
@@ -70,7 +72,7 @@ class Toolbar extends Component {
                         { this.renderGenres() }
 
                         <div className="toolbar-item toolbar-filter toolbar-times">
-                            <i className="icon ion-funnel"></i>
+                            <i className="icon ion-funnel" />
 
                             { this.renderTimes() }
                         </div>

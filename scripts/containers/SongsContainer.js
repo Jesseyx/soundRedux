@@ -1,12 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+
 import Songs from '../components/Songs';
 import MobileSongs from '../components/MobileSongs';
+
 import { fetchSongsIfNeeded } from '../actions/playlists';
 import { getPlayingSongId } from '../utils/PlayerUtils';
 
 const propTypes = {
-    isMobile: PropTypes.bool
+    isMobile: PropTypes.bool,
 }
 
 class SongsContainer extends Component {

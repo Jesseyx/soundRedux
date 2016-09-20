@@ -1,7 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
-import classnames from 'classnames';
+import classNames from 'classnames';
+
 import SongDetails from '../components/SongDetails';
+import Popover from '../components/Popover';
+import Playlist from '../components/Playlist';
+
 import { formatSeconds, formatStreamUrl } from '../utils/FormatUtils';
 import { getImageUrl } from '../utils/SongUtils';
 import { changeCurrentTime, toggleIsPlaying } from '../actions/player';
@@ -9,8 +13,6 @@ import { offsetLeft } from '../utils/MouseUtils';
 import LocalStorageUtils from '../utils/LocalStorageUtils';
 import { CHANGE_TYPES } from '../constants/SongConstants';
 import { changeSong } from '../actions/player';
-import Popover from '../components/Popover';
-import Playlist from '../components/Playlist';
 
 const propTypes = {
     dispatch: PropTypes.func.isRequired,
@@ -28,6 +30,7 @@ class Player extends Component {
 
         const previousVolumeLevel = Number.parseFloat(LocalStorageUtils.get('volume'));
         this.state = {
+            activePlaylistIndex: null,
             currentTime: 0,                                 // 当前播放时间
             duration: 0,                                    // 持续时间
             isSeeking: false,                               // 是否正在 loading
@@ -450,7 +453,7 @@ class Player extends Component {
                                 <i className="icon ion-ios-rewind" />
                             </div>
                             <div className="player-button" onClick={ this.togglePlay }>
-                                <i className={ classnames({
+                                <i className={ classNames({
                                     icon: true,
                                     'ion-ios-pause': isPlaying,
                                     'ion-ios-play': !isPlaying,
@@ -480,7 +483,7 @@ class Player extends Component {
 
                         <div className="player-section">
                             <div
-                                className={ classnames({
+                                className={ classNames({
                                     'player-button': true,
                                     active: this.state.repeat,
                                 }) }
@@ -489,7 +492,7 @@ class Player extends Component {
                                 <i className="icon ion-loop" />
                             </div>
                             <div
-                                className={ classnames({
+                                className={ classNames({
                                     'player-button': true,
                                     active: this.state.shuffle,
                                 }) }

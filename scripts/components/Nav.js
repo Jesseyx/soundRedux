@@ -1,9 +1,11 @@
 import React, { Component, PropTypes } from 'react';
-import classnames from 'classnames';
-import { loginUser, logoutUser } from '../actions/authed';
+import classNames from 'classnames';
+
 import Popover from './Popover';
 import Link from './Link';
 import NavSearch from './NavSearch';
+
+import { loginUser, logoutUser } from '../actions/authed';
 import { getImageUrl } from '../utils/SongUtils';
 
 const propTypes = {
@@ -11,6 +13,7 @@ const propTypes = {
     authedPlaylists: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     navigator: PropTypes.object.isRequired,
+    songs: PropTypes.object.isRequired,
 }
 
 class Nav extends Component {
@@ -23,8 +26,7 @@ class Nav extends Component {
     renderStreamLink() {
         const { authed, dispatch, navigator } = this.props;
         const { route } = navigator;
-        // const hasNewStreamSongs = authed.newStreamSongs.length > 0;
-        const hasNewStreamSongs = false;
+        const hasNewStreamSongs = authed.newStreamSongs.length > 0;
 
         if (!authed.user) {
             return null;
@@ -33,14 +35,14 @@ class Nav extends Component {
         return (
             <div className="nav-nav-item">
                 <Link
-                    className={ classnames({
+                    className={ classNames({
                         'nav-nav-user-link': true,
                         active: route.path[1] === 'stream'
                     }) }
                     dispatch={ dispatch }
                     route={{ path: ['me', 'stream' ]}}
                 >
-                    { hasNewStreamSongs ? <div className="nav-nav-user-link-indicator"></div> : null }
+                    { hasNewStreamSongs ? <div className="nav-nav-user-link-indicator" /> : null }
                     <span className="nav-nav-user-link-text">stream</span>
                 </Link>
             </div>
@@ -58,7 +60,7 @@ class Nav extends Component {
         return (
             <div className="nav-nav-item">
                 <Link
-                    className={ classnames({
+                    className={ classNames({
                         'nav-nav-user-link': true,
                         active: route.path[1] === 'likes'
                     }) }
@@ -74,15 +76,16 @@ class Nav extends Component {
     renderPlaylistsPopover() {
         const { authed, navigator } = this.props;
         const { path } = navigator.route;
-        const playlist = this.getPlaylist();
 
         if (!authed.user) {
             return null;
         }
 
+        const playlist = this.getPlaylist();
+
         return (
             <Popover className="nav-nav-item nav-playlists">
-                <div className={ classnames({
+                <div className={ classNames({
                     'nav-nav-user-link': true,
                     active: path[1] === 'playlists'
                 }) }>
@@ -124,7 +127,7 @@ class Nav extends Component {
                     route={{ path: ['me', 'playlists', playlistId] }}
                 >
                     <div className="nav-playlist-title">
-                        { `${ playlist.title } (${ playlist.track_count }` })
+                        { `${ playlist.title } (${ playlist.track_count })` }
                     </div>
 
                     <div className="nav-playlist-images">
@@ -165,9 +168,9 @@ class Nav extends Component {
             return (
                 <Popover className="nav-user">
                     <div className="nav-user-link">
-                        <img className="nav-authed-image" src="https://i1.sndcdn.com/avatars-000217074860-ujilem-large.jpg" />
-                        <i className="icon ion-chevron-down"></i>
-                        <i className="icon ion-chevron-up"></i>
+                        <img className="nav-authed-image" src={ getImageUrl(authed.user.avatar_url) } />
+                        <i className="icon ion-chevron-down" />
+                        <i className="icon ion-chevron-up" />
                     </div>
                     <div className="nav-user-popover popover-content">
                         <ul className="nav-user-popover-list">
@@ -183,9 +186,9 @@ class Nav extends Component {
         return (
             <Popover className="nav-user">
                 <div className="nav-user-link">
-                    <i className="icon ion-person"></i>
-                    <i className="icon ion-chevron-down"></i>
-                    <i className="icon ion-chevron-up"></i>
+                    <i className="icon ion-person" />
+                    <i className="icon ion-chevron-down" />
+                    <i className="icon ion-chevron-up" />
                 </div>
                 <div className="nav-user-popover popover-content">
                     <ul className="nav-user-popover-list">
@@ -200,6 +203,7 @@ class Nav extends Component {
 
     render() {
         const { dispatch } = this.props;
+
         return (
             <div className="nav">
                 <div className="container clearfix">

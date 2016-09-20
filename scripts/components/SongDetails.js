@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
+
 import Link from './Link';
+
 import { formatSongTitle } from '../utils/FormatUtils';
 
 const propTypes = {

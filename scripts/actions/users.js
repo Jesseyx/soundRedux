@@ -27,41 +27,6 @@ export function fetchUserIfNeeded(userId) {
     }
 }
 
-export function requestUser(userId) {
-    return {
-        type: types.REQUEST_USER,
-        userId,
-    }
-}
-
-export function receiveUserPre(userId, entities) {
-    return dispatch => {
-        dispatch(receiveUser(entities));
-        dispatch(fetchUserData(userId, entities.users[userId].username));
-    }
-}
-
-export function receiveUser(entities) {
-    return {
-        type: types.RECEIVE_USER,
-        entities,
-    }
-}
-
-export function receiveUserFollowings(entities) {
-    return {
-        type: types.RECEIVE_USER_FOLLOWINGS,
-        entities,
-    }
-}
-
-export function receiveUserProfiles(entities) {
-    return {
-        type: types.RECEIVE_USER_PROFILES,
-        entities,
-    }
-}
-
 function fetchUser(userId) {
     return dispatch => {
         dispatch(requestUser(userId));
@@ -73,6 +38,27 @@ function fetchUser(userId) {
                 dispatch(receiveUserPre(userId, normalized.entities));
             })
             .catch(err => { throw err; })
+    }
+}
+
+export function requestUser(userId) {
+    return {
+        type: types.REQUEST_USER,
+        userId,
+    }
+}
+
+function receiveUserPre(userId, entities) {
+    return dispatch => {
+        dispatch(receiveUser(entities));
+        dispatch(fetchUserData(userId, entities.users[userId].username));
+    }
+}
+
+export function receiveUser(entities) {
+    return {
+        type: types.RECEIVE_USER,
+        entities,
     }
 }
 
@@ -118,6 +104,13 @@ function fetchUserFollowings(userId) {
         .catch(err => { throw err; })
 }
 
+export function receiveUserFollowings(entities) {
+    return {
+        type: types.RECEIVE_USER_FOLLOWINGS,
+        entities,
+    }
+}
+
 function fetchUserProfiles(userId) {
     return dispatch => fetch(constructUserProfilesUrl(userId))
         .then(response => response.json())
@@ -130,4 +123,11 @@ function fetchUserProfiles(userId) {
             console.groupEnd();
         })
         .catch(err => { throw err; })
+}
+
+export function receiveUserProfiles(entities) {
+    return {
+        type: types.RECEIVE_USER_PROFILES,
+        entities,
+    }
 }

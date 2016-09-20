@@ -51,6 +51,7 @@ class Me extends Component {
                         dispatch={ dispatch }
                     />
                 );
+
             case 'likes':
                 return (
                     <MePromptLikes
@@ -59,6 +60,7 @@ class Me extends Component {
                         playlists={ playlists }
                     />
                 );
+
             default:
                 return null;
         }

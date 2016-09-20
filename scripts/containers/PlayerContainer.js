@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+
 import MobilePlayer from '../components/MobilePlayer';
 import Player from '../components/Player';
+
 import { getPlayingSongId } from '../utils/PlayerUtils';
 
 const propTypes = {

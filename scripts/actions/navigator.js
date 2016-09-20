@@ -16,12 +16,12 @@ export function initNavigator() {
 export function navigateBack(e) {
     console.log('navigateBack: ');
     console.log(e);
-}
+    return dispatch => {
+        if (e.state) {
+            return dispatch(navigateTo(e.state.route, false));
+        }
 
-export function changePath(route) {
-    return {
-        type: types.CHANGE_PATH,
-        route,
+        return null;
     }
 }
 
@@ -43,4 +43,11 @@ export function navigateTo(route, shouldPushState = true) {
 
 function pushState(route) {
     history.pushState({ route }, '', `#/${ constructUrl(route) }`);
+}
+
+export function changePath(route) {
+    return {
+        type: types.CHANGE_PATH,
+        route,
+    }
 }

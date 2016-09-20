@@ -56,6 +56,13 @@ export function fetchSongs(url, playlist) {
     }
 }
 
+function requestSongs(playlist) {
+    return {
+        type: types.REQUEST_SONGS,
+        playlist,
+    }
+}
+
 export function receiveSongs(entities, songs, playlist, nextUrl, futureUrl) {
     return {
         type: types.RECEIVE_SONGS,
@@ -78,13 +85,6 @@ export function fetchSongsIfNeeded(playlist) {
         }
 
         return null;
-    }
-}
-
-function requestSongs(playlist) {
-    return {
-        type: types.REQUEST_SONGS,
-        playlist,
     }
 }
 

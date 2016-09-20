@@ -64,9 +64,9 @@ class Song extends Component {
         }
 
         return (
-                <div className="toggle-play-button" onClick={ playSongFunc }>
-                    <i className="toggle-play-button-icon ion-ios-play" />
-                </div>
+            <div className="toggle-play-button" onClick={ playSongFunc }>
+                <i className="toggle-play-button-icon ion-ios-play" />
+            </div>
         );
     }
 
@@ -85,23 +85,23 @@ class Song extends Component {
             const playSongFunc = this.playSong.bind(this, i + 1);
 
             return (
-                    <SongListItem
-                        authed={ authed }
-                        dispatch={ dispatch }
-                        isActive={ playingSongId === relatedSongId }
-                        key={ relatedSongId }
-                        player={ player }
-                        playSong={ playSongFunc }
-                        song={ relatedSong }
-                        user={ user }
-                    />
+                <SongListItem
+                    authed={ authed }
+                    dispatch={ dispatch }
+                    isActive={ playingSongId === relatedSongId }
+                    key={ relatedSongId }
+                    player={ player }
+                    playSong={ playSongFunc }
+                    song={ relatedSong }
+                    user={ user }
+                />
             )
         })
 
         return (
-                <div className="tab-content">
-                    { items }
-                </div>
+            <div className="tab-content">
+                { items }
+            </div>
         )
     }
 
@@ -114,12 +114,12 @@ class Song extends Component {
         }
 
         return (
-                <Comments
-                        comments={ song.comments }
-                        currentTime={ player.currentTime }
-                        height={ height }
-                        isActive={ playingSongId === song.id }
-                />
+            <Comments
+                comments={ song.comments }
+                currentTime={ player.currentTime }
+                height={ height }
+                isActive={ playingSongId === song.id }
+            />
         )
     }
 
@@ -148,8 +148,8 @@ class Song extends Component {
                                 <div className="song-main">
                                     <div className="song-detail">
                                         <div
-                                                className="song-image"
-                                                style={{ backgroundImage: `url(${ image })` }}
+                                            className="song-image"
+                                            style={{ backgroundImage: `url(${ image })` }}
                                         >
                                             { this.renderTogglePlayButton() }
                                         </div>
@@ -160,13 +160,13 @@ class Song extends Component {
 
                                             <div className="song-user">
                                                 <div
-                                                        className="song-user-image"
-                                                        style={{ backgroundImage: `url(${ getImageUrl(user.avatar_url) })` }}
+                                                    className="song-user-image"
+                                                    style={{ backgroundImage: `url(${ getImageUrl(user.avatar_url) })` }}
                                                 />
                                                 <Link
-                                                        className="song-username"
-                                                        dispatch={ dispatch }
-                                                        route={{ path: ['users', user.id] }}
+                                                    className="song-username"
+                                                    dispatch={ dispatch }
+                                                    route={{ path: ['users', user.id] }}
                                                 >
                                                     { user.username }
                                                 </Link>
@@ -174,10 +174,10 @@ class Song extends Component {
 
                                             <div className="song-stats">
                                                 <SongHeartCount
-                                                        authed={ authed }
-                                                        count={ song.likes_count ? song.likes_count : song.favoritings_count }
-                                                        dispatch={ dispatch }
-                                                        songId={ songId }
+                                                    authed={ authed }
+                                                    count={ song.likes_count ? song.likes_count : song.favoritings_count }
+                                                    dispatch={ dispatch }
+                                                    songId={ songId }
                                                 />
                                                 <div className="song-stat">
                                                     <i className="icon ion-play" />
@@ -213,10 +213,10 @@ class Song extends Component {
 
                         <div className="col-3-10">
                             <div
-                                    className={ classNames({
-                                        sidebar: true,
-                                        sticky: sticky,
-                                    }) }
+                                className={ classNames({
+                                    sidebar: true,
+                                    sticky: sticky,
+                                }) }
                             >
                                 { this.renderComments() }
                             </div>

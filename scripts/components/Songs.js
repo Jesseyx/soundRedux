@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
-import classnames from 'classnames';
+import classNames from 'classnames';
+
 import Toolbar from './Toolbar';
 import SongCards from './SongCards';
 import stickify from './Stickify';
@@ -45,7 +46,7 @@ class Songs extends Component {
         const scrollFunc = fetchSongsIfNeeded.bind(null, playlist);
 
         return (
-            <div className={ classnames({
+            <div className={ classNames({
                 songs: true,
                 sticky: sticky,
             }) }>
