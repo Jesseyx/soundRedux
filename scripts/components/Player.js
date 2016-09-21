@@ -311,9 +311,12 @@ class Player extends Component {
 
         this.setState({
             isSeeking: false,
-        }, () => {
-            ReactDOM.findDOMNode(this.refs.audio).volume = this.state.volume;
+        // }, () => {
+        //     ReactDOM.findDOMNode(this.refs.audio).volume = this.state.volume;
         })
+
+        // fix updating LocalStorage on volume slider mouseup
+        LocalStorageUtils.set('volume', this.state.volume);
     }
 
     renderDurationBar() {
@@ -438,7 +441,11 @@ class Player extends Component {
                     <div className="player-main">
 
                         <div className="player-section player-info">
-                            <img className="player-image" src={ getImageUrl(song.artwork_url) } />
+                            <img
+                                className="player-image"
+                                src={ getImageUrl(song.artwork_url) }
+                                alt="Song artwork"
+                            />
                             <SongDetails
                                 dispatch={ dispatch }
                                 songId={ song.id }

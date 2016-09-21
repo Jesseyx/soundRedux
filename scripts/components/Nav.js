@@ -145,6 +145,7 @@ class Nav extends Component {
                 className="nav-playlist-image"
                 key={ songId }
                 src={ getImageUrl(songs[songId].artwork_url) }
+                alt="Song artwork"
             />
         )
     }
@@ -168,7 +169,11 @@ class Nav extends Component {
             return (
                 <Popover className="nav-user">
                     <div className="nav-user-link">
-                        <img className="nav-authed-image" src={ getImageUrl(authed.user.avatar_url) } />
+                        <img
+                            className="nav-authed-image"
+                            src={ getImageUrl(authed.user.avatar_url) }
+                            alt="User avatar"
+                        />
                         <i className="icon ion-chevron-down" />
                         <i className="icon ion-chevron-up" />
                     </div>

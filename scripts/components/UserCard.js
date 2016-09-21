@@ -17,7 +17,11 @@ class UserCard extends Component {
 
         return (
             <div className="user-card">
-                <img className="user-card-image" src={ getImageUrl(user.avatar_url) } />
+                <img
+                    className="user-card-image"
+                    src={ getImageUrl(user.avatar_url) }
+                    alt="User avatar"
+                />
 
                 <div className="user-card-info">
                     <Link

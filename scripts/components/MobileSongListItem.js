@@ -26,6 +26,7 @@ class MobileSongListItem extends Component {
                 <img
                     className="mobile-song-list-item-image"
                     src={ getImageUrl(song.artwork_url) }
+                    alt="Song artwork"
                 />
 
                 <div className="mobile-song-list-item-info">

@@ -189,7 +189,11 @@ class MobileNav extends Component {
                         href="#"
                         onClick={ this.toggleUserMenuOpen }
                     >
-                        <img className="mobile-nav-authed-image" src={ getImageUrl(authed.user.avatar_url) } />
+                        <img
+                            className="mobile-nav-authed-image"
+                            src={ getImageUrl(authed.user.avatar_url) }
+                            alt="User avatar"
+                        />
                         { authed.user.username }
                     </a>
 
