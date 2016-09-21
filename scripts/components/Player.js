@@ -83,6 +83,9 @@ class Player extends Component {
         // 每当音量改变时（包括将音量设置为静音）时运行的脚本
         audioElement.addEventListener('volumechange', this.handleVolumeChange, false);
 
+        // fixing player's volume always set to 1 on start
+        audioElement.volume = this.state.volume
+
         audioElement.play();
     }
 

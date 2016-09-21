@@ -1,6 +1,23 @@
 import * as types from '../constants/ActionTypes';
 import { CHANGE_TYPES } from '../constants/SongConstants';
 
+export function playSong(playlist, index) {
+    return (dispatch, getState) => {
+        dispatch(changeCurrentTime(0));
+
+        const { player } = getState();
+        const { selectedPlaylists } = player;
+        const len = selectedPlaylists.length;
+
+        // len - 1 和上面对应
+        if (len === 0 || selectedPlaylists[len -1] !== playlist) {
+            dispatch(changeSelectedPlaylists(selectedPlaylists, playlist));
+        }
+
+        dispatch(changePlayingSong(index));
+    }
+}
+
 export function changeCurrentTime (time) {
     return {
         type: types.CHANGE_CURRENT_TIME,
@@ -20,37 +37,6 @@ function changeSelectedPlaylists(playlists, playlist) {
     return {
         type: types.CHANGE_SELECTED_PLAYLISTS,
         playlists
-    }
-}
-
-export function changePlayingSong(songIndex) {
-    return {
-        type: types.CHANGE_PLAYING_SONG,
-        songIndex,
-    }
-}
-
-export function playSong(playlist, index) {
-    return (dispatch, getState) => {
-        dispatch(changeCurrentTime(0));
-
-        const { player } = getState();
-        const { selectedPlaylists } = player;
-        const len = selectedPlaylists.length;
-
-        // len - 1 和上面对应
-        if (len === 0 || selectedPlaylists[len -1] !== playlist) {
-            dispatch(changeSelectedPlaylists(selectedPlaylists, playlist));
-        }
-
-        dispatch(changePlayingSong(index));
-    }
-}
-
-export function toggleIsPlaying(isPlaying) {
-    return {
-        type: types.TOGGLE_IS_PLAYING,
-        isPlaying,
     }
 }
 
@@ -75,5 +61,19 @@ export function changeSong(changeType) {
         }console.log(newSongIndex);
 
         return dispatch(changePlayingSong(newSongIndex));
+    }
+}
+
+export function changePlayingSong(songIndex) {
+    return {
+        type: types.CHANGE_PLAYING_SONG,
+        songIndex,
+    }
+}
+
+export function toggleIsPlaying(isPlaying) {
+    return {
+        type: types.TOGGLE_IS_PLAYING,
+        isPlaying,
     }
 }

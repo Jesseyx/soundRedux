@@ -27,7 +27,7 @@
         "currentSongIndex": null,
         "currentTime": 0,
         "isPlaying": false,
-        "selectedPlaylists": [],
+        "selectedPlaylists": []
     },
     "playlists": {
         "I liked|authed": {
