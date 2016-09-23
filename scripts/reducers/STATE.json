@@ -1,40 +1,40 @@
 {
-    "authed": {
-        "user": null,
-        "likes": {},
-        "playlists": [],
-        "followings": {}
-    },
-    "entities": {
-        "songs": {},
-        "users": {},
-        "playlists": {}
-    },
-    "environment": {
-        "isMobile": false,
-        "height": null,
-        "width": null
-    },
-    "navigator": {
-        "route": {
-            "path": ["songs"],
-            "query": {
-                "q": "house"
-            }
-        }
-    },
-    "player": {
-        "currentSongIndex": null,
-        "currentTime": 0,
-        "isPlaying": false,
-        "selectedPlaylists": []
-    },
-    "playlists": {
-        "I liked|authed": {
-            "isFetching": false,
-            "items": [],
-            "nextUrl": null,
-            "futureUrl": null
-        }
+  "authed": {
+    "user": null,
+    "likes": {},
+    "playlists": [],
+    "followings": {}
+  },
+  "entities": {
+    "songs": {},
+    "users": {},
+    "playlists": {}
+  },
+  "environment": {
+    "isMobile": false,
+    "height": null,
+    "width": null
+  },
+  "navigator": {
+    "route": {
+      "path": ["songs"],
+      "query": {
+        "q": "house"
+      }
     }
+  },
+  "player": {
+    "currentSongIndex": null,
+    "currentTime": 0,
+    "isPlaying": false,
+    "selectedPlaylists": []
+  },
+  "playlists": {
+    "I liked|authed": {
+      "isFetching": false,
+      "items": [],
+      "nextUrl": null,
+      "futureUrl": null
+    }
+  }
 }

@@ -18,214 +18,215 @@ import stickify from '../components/Stickify';
 import Comments from './Comments';
 
 const propTypes = {
-    authed: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired,
-    height: PropTypes.number,
-    player: PropTypes.object.isRequired,
-    playingSongId: PropTypes.number,
-    playlists: PropTypes.object.isRequired,
-    songId: PropTypes.number,
-    songs: PropTypes.object.isRequired,
-    sticky: PropTypes.bool.isRequired,
-    users: PropTypes.object.isRequired,
-}
+  authed: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  height: PropTypes.number,
+  player: PropTypes.object.isRequired,
+  playingSongId: PropTypes.number,
+  playlists: PropTypes.object.isRequired,
+  songId: PropTypes.number,
+  songs: PropTypes.object.isRequired,
+  sticky: PropTypes.bool.isRequired,
+  users: PropTypes.object.isRequired,
+};
 
 class Song extends Component {
-    componentWillMount() {
-        const { dispatch, songId } = this.props;
-        dispatch(fetchSongIfNeeded(songId));
+  componentWillMount() {
+    const { dispatch, songId } = this.props;
+    dispatch(fetchSongIfNeeded(songId));
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { dispatch, songId } = this.props;
+    if (nextProps.songId !== songId) {
+      dispatch(fetchSongIfNeeded());
+    }
+  }
+
+  playSong(i) {
+    const { dispatch, songId, songs } = this.props;
+    const song = songs[songId];
+
+    if (!song) {
+      return;
     }
 
-    componentWillReceiveProps(nextProps) {
-        const { dispatch, songId } = this.props;
-        if (nextProps.songId !== songId) {
-            dispatch(fetchSongIfNeeded());
-        }
+    dispatch(playSong(song.title + SONG_PLAYLIST_SUFFIX, i));
+  }
+
+  renderTogglePlayButton() {
+    const { playingSongId, songId } = this.props;
+    const isActive = playingSongId && playingSongId === songId;
+    const playSongFunc = this.playSong.bind(this, 0);
+
+    if (isActive) {
+      return <TogglePlayButtonContainer />;
     }
 
-    playSong(i) {
-        const { dispatch, songId, songs } = this.props;
-        const song = songs[songId];
+    return (
+      <div className="toggle-play-button" onClick={playSongFunc}>
+        <i className="toggle-play-button-icon ion-ios-play" />
+      </div>
+    );
+  }
 
-        if (!song) {
-            return;
-        }
-
-        dispatch(playSong(song.title + SONG_PLAYLIST_SUFFIX, i));
+  renderSongs() {
+    const { authed, dispatch, player, playingSongId, playlists, songId, songs, users } = this.props;
+    const song = songs[songId];
+    const playlist = song.title + SONG_PLAYLIST_SUFFIX;
+    const relatedSongs = playlist in playlists ? playlists[playlist] : {};
+    if (!relatedSongs.items) {
+      return null;
     }
 
-    renderTogglePlayButton() {
-        const { playingSongId, songId } = this.props;
-        const isActive = playingSongId && playingSongId === songId;
-        const playSongFunc = this.playSong.bind(this, 0);
+    const items = relatedSongs.items.slice(1).map((relatedSongId, i) => {
+      const relatedSong = songs[relatedSongId];
+      const user = users[relatedSong.user_id];
+      const playSongFunc = this.playSong.bind(this, i + 1);
 
-        if (isActive) {
-            return <TogglePlayButtonContainer />;
-        }
+      return (
+        <SongListItem
+          authed={authed}
+          dispatch={dispatch}
+          isActive={playingSongId === relatedSongId}
+          key={relatedSongId}
+          player={player}
+          playSong={playSongFunc}
+          song={relatedSong}
+          user={user}
+        />
+      );
+    });
 
-        return (
-            <div className="toggle-play-button" onClick={ playSongFunc }>
-                <i className="toggle-play-button-icon ion-ios-play" />
-            </div>
-        );
+    return (
+      <div className="tab-content">
+        { items }
+      </div>
+    );
+  }
+
+  renderComments() {
+    const { height, player, playingSongId, songId, songs } = this.props;
+    const song = songs[songId];
+
+    if (!song || !song.comments) {
+      return null;
     }
 
-    renderSongs() {
-        const { authed, dispatch, player, playingSongId, playlists, songId, songs, users } = this.props;
-        const song = songs[songId];
-        const playlist = song.title + SONG_PLAYLIST_SUFFIX;
-        const relatedSongs = playlist in playlists ? playlists[playlist] : {};
-        if (!relatedSongs.items) {
-            return null;
-        }
+    return (
+      <Comments
+        comments={song.comments}
+        currentTime={player.currentTime}
+        height={height}
+        isActive={playingSongId === song.id}
+      />
+    );
+  }
 
-        const items = relatedSongs.items.slice(1).map((relatedSongId, i) => {
-            const relatedSong = songs[relatedSongId];
-            const user = users[relatedSong.user_id];
-            const playSongFunc = this.playSong.bind(this, i + 1);
-
-            return (
-                <SongListItem
-                    authed={ authed }
-                    dispatch={ dispatch }
-                    isActive={ playingSongId === relatedSongId }
-                    key={ relatedSongId }
-                    player={ player }
-                    playSong={ playSongFunc }
-                    song={ relatedSong }
-                    user={ user }
-                />
-            )
-        })
-
-        return (
-            <div className="tab-content">
-                { items }
-            </div>
-        )
+  render() {
+    const { authed, dispatch, player, playingSongId, songId, songs, sticky, users } = this.props;
+    const song = songs[songId];
+    if (!song) {
+      return <Spinner />;
     }
 
-    renderComments() {
-        const { height, player, playingSongId, songId, songs } = this.props;
-        const song = songs[songId];
+    const isActive = Boolean(playingSongId && playingSongId === songId);
+    const image = getImageUrl(song.artwork_url, IMAGE_SIZES.LARGE);
+    const playSongFunc = this.playSong.bind(this, 0);
+    const user = song.user_id in users ? users[song.user_id] : {};
 
-        if (!song || !song.comments) {
-            return null;
-        }
-
-        return (
-            <Comments
-                comments={ song.comments }
-                currentTime={ player.currentTime }
-                height={ height }
-                isActive={ playingSongId === song.id }
-            />
-        )
-    }
-
-    render() {
-        const { authed, dispatch, player, playingSongId, songId, songs, sticky, users } = this.props;
-        const song = songs[songId];
-        if (!song) {
-            return <Spinner />;
-        }
-
-        const isActive = Boolean(playingSongId && playingSongId === songId);
-        const image = getImageUrl(song.artwork_url, IMAGE_SIZES.LARGE);
-        const playSongFunc = this.playSong.bind(this, 0);
-        const user = song.user_id in users ? users[song.user_id] : {};
-
-        return (
-            <div className="container">
-                <div className="content">
-                    <div className="grid">
-                        <div className="col-7-10">
-                            <div className={ classNames({
-                                song: true,
-                                card: true,
-                                active: isActive,
-                            })}>
-                                <div className="song-main">
-                                    <div className="song-detail">
-                                        <div
-                                            className="song-image"
-                                            style={{ backgroundImage: `url(${ image })` }}
-                                        >
-                                            { this.renderTogglePlayButton() }
-                                        </div>
-                                        <div className="song-info">
-                                            <div className="song-title">
-                                                { song.title }
-                                            </div>
-
-                                            <div className="song-user">
-                                                <div
-                                                    className="song-user-image"
-                                                    style={{ backgroundImage: `url(${ getImageUrl(user.avatar_url) })` }}
-                                                />
-                                                <Link
-                                                    className="song-username"
-                                                    dispatch={ dispatch }
-                                                    route={{ path: ['users', user.id] }}
-                                                >
-                                                    { user.username }
-                                                </Link>
-                                            </div>
-
-                                            <div className="song-stats">
-                                                <SongHeartCount
-                                                    authed={ authed }
-                                                    count={ song.likes_count ? song.likes_count : song.favoritings_count }
-                                                    dispatch={ dispatch }
-                                                    songId={ songId }
-                                                />
-                                                <div className="song-stat">
-                                                    <i className="icon ion-play" />
-                                                    <span>{ addCommas(song.playback_count) }</span>
-                                                </div>
-                                                <div className="song-stat">
-                                                    <i className="icon ion-chatbubble" />
-                                                    <span>{ addCommas(song.comment_count) }</span>
-                                                </div>
-                                            </div>
-
-                                            <div className="song-description">
-                                                { song.description }
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="song-waveform">
-                                        <Waveform
-                                            currentTime={ player.currentTime }
-                                            dispatch={ dispatch }
-                                            duration={ song.duration }
-                                            isActive={ isActive }
-                                            playSong={ playSongFunc }
-                                            waveformUrl={ song.waveform_url.replace('https', 'http') }
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            { this.renderSongs() }
-                        </div>
-
-                        <div className="col-3-10">
-                            <div
-                                className={ classNames({
-                                    sidebar: true,
-                                    sticky: sticky,
-                                }) }
-                            >
-                                { this.renderComments() }
-                            </div>
-                        </div>
+    return (
+      <div className="container">
+        <div className="content">
+          <div className="grid">
+            <div className="col-7-10">
+              <div
+                className={classNames({
+                  'song card': true,
+                  active: isActive,
+                })}
+              >
+                <div className="song-main">
+                  <div className="song-detail">
+                    <div
+                      className="song-image"
+                      style={{ backgroundImage: `url(${image})` }}
+                    >
+                      { this.renderTogglePlayButton() }
                     </div>
+                    <div className="song-info">
+                      <div className="song-title">
+                        { song.title }
+                      </div>
+
+                      <div className="song-user">
+                        <div
+                          className="song-user-image"
+                          style={{ backgroundImage: `url(${getImageUrl(user.avatar_url)})` }}
+                        />
+                        <Link
+                          className="song-username"
+                          dispatch={dispatch}
+                          route={{ path: ['users', user.id] }}
+                        >
+                          { user.username }
+                        </Link>
+                      </div>
+
+                      <div className="song-stats">
+                        <SongHeartCount
+                          authed={authed}
+                          count={song.likes_count ? song.likes_count : song.favoritings_count}
+                          dispatch={dispatch}
+                          songId={songId}
+                        />
+                        <div className="song-stat">
+                          <i className="icon ion-play" />
+                          <span>{ addCommas(song.playback_count) }</span>
+                        </div>
+                        <div className="song-stat">
+                          <i className="icon ion-chatbubble" />
+                          <span>{ addCommas(song.comment_count) }</span>
+                        </div>
+                      </div>
+
+                      <div className="song-description">
+                        { song.description }
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="song-waveform">
+                    <Waveform
+                      currentTime={player.currentTime}
+                      dispatch={dispatch}
+                      duration={song.duration}
+                      isActive={isActive}
+                      playSong={playSongFunc}
+                      waveformUrl={song.waveform_url.replace('https', 'http')}
+                    />
+                  </div>
                 </div>
+              </div>
+
+              { this.renderSongs() }
             </div>
-        )
-    }
+
+            <div className="col-3-10">
+              <div
+                className={classNames({
+                  sidebar: true,
+                  sticky,
+                })}
+              >
+                { this.renderComments() }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 
 Song.propTypes = propTypes;

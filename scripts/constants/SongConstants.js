@@ -1,28 +1,28 @@
 // 流派
 export const GENRES = [
-    'chill',
-    'deep',
-    'dubstep',
-    'house',
-    'progressive',
-    'tech',
-    'trance',
-    'tropical',
+  'chill',
+  'deep',
+  'dubstep',
+  'house',
+  'progressive',
+  'tech',
+  'trance',
+  'tropical',
 ];
 
 export const GENRES_MAP = GENRES.reduce((obj, genre) =>
-    Object.assign({}, obj, {
-        [genre]: 1,
-    }), {});
+  Object.assign({}, obj, {
+    [genre]: 1,
+  }), {});
 
 export const IMAGE_SIZES = {
-    LARGE: 't300x300',
-    XLARGE: 't500x500',
+  LARGE: 't300x300',
+  XLARGE: 't500x500',
 };
 
 export const CHANGE_TYPES = {
-    NEXT: 'next',
-    PLAY: 'play',
-    PREV: 'prev',
-    SHUFFLE: 'shuffle',
-}
+  NEXT: 'next',
+  PLAY: 'play',
+  PREV: 'prev',
+  SHUFFLE: 'shuffle',
+};

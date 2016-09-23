@@ -7,49 +7,49 @@ import { getUserLocation } from '../utils/UserUtils';
 import { addCommas } from '../utils/FormatUtils';
 
 const propTypes = {
-    dispatch: PropTypes.func.isRequired,
-    user: PropTypes.object.isRequired,
-}
+  dispatch: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
+};
 
 class UserCard extends Component {
-    render() {
-        const { dispatch, user } = this.props;
+  render() {
+    const { dispatch, user } = this.props;
 
-        return (
-            <div className="user-card">
-                <img
-                    className="user-card-image"
-                    src={ getImageUrl(user.avatar_url) }
-                    alt="User avatar"
-                />
+    return (
+      <div className="user-card">
+        <img
+          className="user-card-image"
+          src={getImageUrl(user.avatar_url)}
+          alt="User avatar"
+        />
 
-                <div className="user-card-info">
-                    <Link
-                        className="user-card-title"
-                        dispatch={ dispatch }
-                        route={{ path: ['users', user.id] }}
-                    >
-                        { user.username }
-                    </Link>
+        <div className="user-card-info">
+          <Link
+            className="user-card-title"
+            dispatch={dispatch}
+            route={{ path: ['users', user.id] }}
+          >
+            { user.username }
+          </Link>
 
-                    <div className="user-card-subtitle">
-                        <i className="icon ion-location" />
-                        { getUserLocation(user) }
-                    </div>
-                </div>
+          <div className="user-card-subtitle">
+            <i className="icon ion-location" />
+            { getUserLocation(user) }
+          </div>
+        </div>
 
-                <div className="user-card-followers">
-                    <div className="user-card-followers-count">
-                        { addCommas(user.followers_count) }
-                    </div>
+        <div className="user-card-followers">
+          <div className="user-card-followers-count">
+            { addCommas(user.followers_count) }
+          </div>
 
-                    <div className="user-card-subtitle">
-                        Followers
-                    </div>
-                </div>
-            </div>
-        )
-    }
+          <div className="user-card-subtitle">
+            Followers
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 
 UserCard.propTypes = propTypes;

@@ -4,150 +4,150 @@ import { getImageUrl } from '../utils/SongUtils';
 import { playSong } from '../actions/player';
 
 const propTypes = {
-    dispatch: PropTypes.func.isRequired,
-    player: PropTypes.object.isRequired,
-    playlists: PropTypes.object.isRequired,
-    songs: PropTypes.object.isRequired,
-}
+  dispatch: PropTypes.func.isRequired,
+  player: PropTypes.object.isRequired,
+  playlists: PropTypes.object.isRequired,
+  songs: PropTypes.object.isRequired,
+};
 
-class Playlist extends  Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            shownPlaylistIndex: null,
-        }
+class Playlist extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      shownPlaylistIndex: null,
+    };
+  }
+
+  getShownPlaylistIndex() {
+    const { selectedPlaylists } = this.props.player;
+    const { shownPlaylistIndex } = this.state;
+    const lastPlaylistIndex = selectedPlaylists.length - 1;
+
+    if (shownPlaylistIndex === null) {
+      return lastPlaylistIndex;
     }
 
-    getShownPlaylistIndex() {
-        const { selectedPlaylists } = this.props.player;
-        const { shownPlaylistIndex } = this.state;
-        const lastPlaylistIndex = selectedPlaylists.length - 1;
+    return shownPlaylistIndex;
+  }
 
-        if (shownPlaylistIndex === null) {
-            return lastPlaylistIndex;
-        }
+  getShownPlaylist(shownPlaylistIndex) {
+    const { selectedPlaylists } = this.props.player;
+    return selectedPlaylists[shownPlaylistIndex];
+  }
 
-        return shownPlaylistIndex;
+  changeShownPlaylistIndex(index, e) {
+    e.preventDefault();
+    const { player } = this.props;
+    const { selectedPlaylists } = player;
+    if (index < 0 || index >= selectedPlaylists.length) {
+      return;
     }
 
-    getShownPlaylist(shownPlaylistIndex) {
-        const { selectedPlaylists } = this.props.player;
-        return selectedPlaylists[shownPlaylistIndex];
-    }
+    this.setState({ shownPlaylistIndex: index });
+  }
 
-    changeShownPlaylistIndex(index, e) {
-        e.preventDefault();
-        const { player } = this.props;
-        const { selectedPlaylists } = player;
-        if (index < 0 || index >= selectedPlaylists.length) {
-            return;
-        }
+  isActiveSong(currentPlaylist, currentSongIndex, i, shownPlaylist) {
+    return (currentPlaylist === shownPlaylist) && (currentSongIndex === i);
+  }
 
-        this.setState({ shownPlaylistIndex: index });
-    }
+  playSong(playlist, index) {
+    const { dispatch } = this.props;
+    dispatch(playSong(playlist, index));
+    this.setState({
+      shownPlaylistIndex: null,
+    });
+  }
 
-    isActiveSong(currentPlaylist, currentSongIndex, i, shownPlaylist) {
-        return (currentPlaylist === shownPlaylist) && (currentSongIndex === i);
-    }
+  handleMouseEnter() {
+    // document.body.style.overflow = 'hidden';
+  }
 
-    playSong(playlist, index) {
-        const { dispatch } = this.props;
-        dispatch(playSong(playlist, index));
-        this.setState({
-            shownPlaylistIndex: null,
-        })
-    }
+  handleMouseLeave() {
+    // document.body.style.overflow = 'auto';
+  }
 
-    handleMouseEnter() {
-        // document.body.style.overflow = 'hidden';
-    }
+  render() {
+    const { player, playlists, songs } = this.props;
+    const { currentSongIndex, selectedPlaylists } = player;
+    const currentPlaylist = selectedPlaylists[selectedPlaylists.length - 1];
+    const shownPlaylistIndex = this.getShownPlaylistIndex();
+    const shownPlaylist = this.getShownPlaylist(shownPlaylistIndex);
+    const stopPropagationFunc = (e) => { e.stopPropagation(); };
 
-    handleMouseLeave() {
-        // document.body.style.overflow = 'auto';
-    }
+    const prevPlaylistFunc = this.changeShownPlaylistIndex.bind(this, shownPlaylistIndex - 1);
+    const isFirstPlaylist = shownPlaylistIndex === 0;
+    const isLastPlaylist = shownPlaylistIndex === selectedPlaylists.length - 1;
+    const nextPlaylistFunc = this.changeShownPlaylistIndex.bind(this, shownPlaylistIndex + 1);
 
-    render() {
-        const { player, playlists, songs } = this.props;
-        const { currentSongIndex, selectedPlaylists } = player;
-        const currentPlaylist = selectedPlaylists[selectedPlaylists.length - 1];
-        const shownPlaylistIndex = this.getShownPlaylistIndex();
-        const shownPlaylist = this.getShownPlaylist(shownPlaylistIndex);
-        const stopPropagationFunc = e => { e.stopPropagation() };
+    const items = playlists[shownPlaylist].items.map((songId, i) => {
+      const song = songs[songId];
+      const isActiveSong = this.isActiveSong(currentPlaylist, currentSongIndex, i, shownPlaylist);
+      const playSongFunc = this.playSong.bind(this, shownPlaylist, i);
 
-        const prevPlaylistFunc = this.changeShownPlaylistIndex.bind(this, shownPlaylistIndex - 1);
-        const isFirstPlaylist = shownPlaylistIndex === 0;
-        const isLastPlaylist = shownPlaylistIndex === selectedPlaylists.length - 1;
-        const nextPlaylistFunc = this.changeShownPlaylistIndex.bind(this, shownPlaylistIndex + 1);
+      return (
+        <li
+          className={classnames({
+            'playlist-song': true,
+            active: isActiveSong,
+          })}
+          key={`${song.id}-${i}`}
+          onClick={playSongFunc}
+        >
+          <img
+            className="playlist-song-image"
+            src={getImageUrl(song.artwork_url)}
+            alt="Song artwork"
+          />
+          <div className="playlist-song-title">{ song.title }</div>
+        </li>
+      );
+    });
 
-        const items = playlists[shownPlaylist].items.map((songId, i) => {
-            const song = songs[songId];
-            const isActiveSong = this.isActiveSong(currentPlaylist, currentSongIndex, i, shownPlaylist);
-            const playSongFunc = this.playSong.bind(this, shownPlaylist, i);
+    return (
+      <div
+        className="popover-content playlist"
+        onClick={stopPropagationFunc}
+        onMouseEnter={this.handleMouseEnter}
+        onMouseLeave={this.handleMouseLeave}
+      >
+        <div className="playlist-header">
+          <a
+            className={classnames({
+              'playlist-header-button': true,
+              disabled: isFirstPlaylist,
+            })}
+            href="#"
+            onClick={prevPlaylistFunc}
+          >
+            <i className="icon ion-ios-arrow-back" />
+          </a>
+          <div className="playlist-header-title">
+            { shownPlaylist.split('|')[0] }
+          </div>
+          <a
+            className={classnames({
+              'playlist-header-button': true,
+              disabled: isLastPlaylist,
+            })}
+            href="#"
+            onClick={nextPlaylistFunc}
+          >
+            <i className="icon ion-ios-arrow-forward" />
+          </a>
+        </div>
 
-            return (
-                <li
-                    className={ classnames({
-                        'playlist-song': true,
-                        active: isActiveSong,
-                    }) }
-                    key={ `${ song.id }-${ i }` }
-                    onClick={ playSongFunc }
-                >
-                    <img
-                        className="playlist-song-image"
-                        src={ getImageUrl(song.artwork_url) }
-                        alt="Song artwork"
-                    />
-                    <div className="playlist-song-title">{ song.title }</div>
-                </li>
-            )
-        })
+        <div className="playlist-body">
+          <ul className="playlist-songs">
+            { items }
+          </ul>
+        </div>
 
-        return (
-            <div
-                className="popover-content playlist"
-                onClick={ stopPropagationFunc }
-                onMouseEnter={ this.handleMouseEnter }
-                onMouseLeave={ this.handleMouseLeave }
-            >
-                <div className="playlist-header">
-                    <a
-                        className={ classnames({
-                            'playlist-header-button': true,
-                            disabled: isFirstPlaylist,
-                        }) }
-                        href="#"
-                        onClick={ prevPlaylistFunc }
-                    >
-                        <i className="icon ion-ios-arrow-back" />
-                    </a>
-                    <div className="playlist-header-title">
-                        { shownPlaylist.split('|')[0] }
-                    </div>
-                    <a
-                        className={ classnames({
-                            'playlist-header-button': true,
-                            disabled: isLastPlaylist,
-                        }) }
-                        href="#"
-                        onClick={ nextPlaylistFunc }
-                    >
-                        <i className="icon ion-ios-arrow-forward" />
-                    </a>
-                </div>
-
-                <div className="playlist-body">
-                    <ul className="playlist-songs">
-                        { items }
-                    </ul>
-                </div>
-
-                <div className="playlist-footer">
-                    { items.length + (items.length === 1 ? ' Song' : ' Songs') }
-                </div>
-            </div>
-        )
-    }
+        <div className="playlist-footer">
+          { items.length + (items.length === 1 ? ' Song' : ' Songs') }
+        </div>
+      </div>
+    );
+  }
 }
 
 Playlist.propTypes = propTypes;

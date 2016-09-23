@@ -6,29 +6,29 @@ import { getPlayingSongId } from '../utils/PlayerUtils';
 import User from '../components/User';
 
 class UserContainer extends Component {
-    render() {
-        return <User { ...this.props } />
-    }
+  render() {
+    return <User {...this.props} />;
+  }
 }
 
 function mapStateToProps(state) {
-    const { authed, entities, environment, navigator, player, playlists } = state;
-    const { height } = environment;
-    const { songs, users } = entities;
-    const { path } = navigator.route;
-    const userId = Number(path[1]);
-    const playingSongId = getPlayingSongId(player, playlists);
+  const { authed, entities, environment, navigator, player, playlists } = state;
+  const { height } = environment;
+  const { songs, users } = entities;
+  const { path } = navigator.route;
+  const userId = Number(path[1]);
+  const playingSongId = getPlayingSongId(player, playlists);
 
-    return {
-        authed,
-        height,
-        player,
-        playingSongId,
-        playlists,
-        songs,
-        userId,
-        users,
-    }
+  return {
+    authed,
+    height,
+    player,
+    playingSongId,
+    playlists,
+    songs,
+    userId,
+    users,
+  };
 }
 
 export default connect(mapStateToProps)(UserContainer);

@@ -9,240 +9,242 @@ import { loginUser, logoutUser } from '../actions/authed';
 import { getImageUrl } from '../utils/SongUtils';
 
 const propTypes = {
-    authed: PropTypes.object.isRequired,
-    authedPlaylists: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired,
-    navigator: PropTypes.object.isRequired,
-    songs: PropTypes.object.isRequired,
-}
+  authed: PropTypes.object.isRequired,
+  authedPlaylists: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  navigator: PropTypes.object.isRequired,
+  songs: PropTypes.object.isRequired,
+};
 
 class Nav extends Component {
-    constructor(props) {
-        super(props);
-        this.login = this.login.bind(this);
-        this.logout = this.logout.bind(this);
+  constructor(props) {
+    super(props);
+    this.login = this.login.bind(this);
+    this.logout = this.logout.bind(this);
+  }
+
+  renderStreamLink() {
+    const { authed, dispatch, navigator } = this.props;
+    const { route } = navigator;
+    const hasNewStreamSongs = authed.newStreamSongs.length > 0;
+
+    if (!authed.user) {
+      return null;
     }
 
-    renderStreamLink() {
-        const { authed, dispatch, navigator } = this.props;
-        const { route } = navigator;
-        const hasNewStreamSongs = authed.newStreamSongs.length > 0;
+    return (
+      <div className="nav-nav-item">
+        <Link
+          className={classNames({
+            'nav-nav-user-link': true,
+            active: route.path[1] === 'stream',
+          })}
+          dispatch={dispatch}
+          route={{ path: ['me', 'stream'] }}
+        >
+          { hasNewStreamSongs ? <div className="nav-nav-user-link-indicator" /> : null }
+          <span className="nav-nav-user-link-text">stream</span>
+        </Link>
+      </div>
+    );
+  }
 
-        if (!authed.user) {
-            return null;
-        }
+  renderLikesLink() {
+    const { authed, dispatch, navigator } = this.props;
+    const { route } = navigator;
 
-        return (
-            <div className="nav-nav-item">
-                <Link
-                    className={ classNames({
-                        'nav-nav-user-link': true,
-                        active: route.path[1] === 'stream'
-                    }) }
-                    dispatch={ dispatch }
-                    route={{ path: ['me', 'stream' ]}}
-                >
-                    { hasNewStreamSongs ? <div className="nav-nav-user-link-indicator" /> : null }
-                    <span className="nav-nav-user-link-text">stream</span>
-                </Link>
-            </div>
-        );
+    if (!authed.user) {
+      return null;
     }
 
-    renderLikesLink() {
-        const { authed, dispatch, navigator } = this.props;
-        const { route } = navigator;
+    return (
+      <div className="nav-nav-item">
+        <Link
+          className={classNames({
+            'nav-nav-user-link': true,
+            active: route.path[1] === 'likes',
+          })}
+          dispatch={dispatch}
+          route={{ path: ['me', 'likes'] }}
+        >
+          <span className="nav-nav-user-link-text">likes</span>
+        </Link>
+      </div>
+    );
+  }
 
-        if (!authed.user) {
-            return null;
-        }
+  renderPlaylistsPopover() {
+    const { authed, navigator } = this.props;
+    const { path } = navigator.route;
 
-        return (
-            <div className="nav-nav-item">
-                <Link
-                    className={ classNames({
-                        'nav-nav-user-link': true,
-                        active: route.path[1] === 'likes'
-                    }) }
-                    dispatch={ dispatch }
-                    route={{ path: ['me', 'likes'] }}
-                >
-                    <span className="nav-nav-user-link-text">likes</span>
-                </Link>
-            </div>
-        )
+    if (!authed.user) {
+      return null;
     }
 
-    renderPlaylistsPopover() {
-        const { authed, navigator } = this.props;
-        const { path } = navigator.route;
+    const playlist = this.getPlaylist();
 
-        if (!authed.user) {
-            return null;
-        }
+    return (
+      <Popover className="nav-nav-item nav-playlists">
+        <div
+          className={classNames({
+            'nav-nav-user-link': true,
+            active: path[1] === 'playlists',
+          })}
+        >
+          <span className="nav-nav-user-link-text">{ playlist }</span>
+          <i className="icon ion-chevron-down" />
+          <i className="icon ion-chevron-up" />
+        </div>
 
-        const playlist = this.getPlaylist();
+        <div className="nav-playlists-popover popover-content">
+          { this.renderPlaylists() }
+        </div>
+      </Popover>
+    );
+  }
 
-        return (
-            <Popover className="nav-nav-item nav-playlists">
-                <div className={ classNames({
-                    'nav-nav-user-link': true,
-                    active: path[1] === 'playlists'
-                }) }>
-                    <span className="nav-nav-user-link-text">{ playlist }</span>
-                    <i className="icon ion-chevron-down"></i>
-                    <i className="icon ion-chevron-up"></i>
-                </div>
+  getPlaylist() {
+    const { authedPlaylists, navigator } = this.props;
+    const { path } = navigator.route;
 
-                <div className="nav-playlists-popover popover-content">
-                    { this.renderPlaylists() }
-                </div>
-            </Popover>
-        )
+    if (path[0] === 'me'
+    && path[1] === 'playlists'
+    && path[2] in authedPlaylists) {
+      return authedPlaylists[path[2]].title;
     }
 
-    getPlaylist() {
-        const { authedPlaylists, navigator } = this.props;
-        const { path } = navigator.route;
+    return 'playlists';
+  }
 
-        if (path[0] === 'me'
-        && path[1] === 'playlists'
-        && path[2] in authedPlaylists) {
-            return authedPlaylists[path[2]].title;
-        }
+  renderPlaylists() {
+    const { authed, authedPlaylists, dispatch } = this.props;
+    return authed.playlists.map((playlistId) => {
+      const playlist = authedPlaylists[playlistId];
 
-        return 'playlists';
-    }
+      return (
+        <Link
+          className="nav-playlist"
+          dispatch={dispatch}
+          key={playlistId}
+          route={{ path: ['me', 'playlists', playlistId] }}
+        >
+          <div className="nav-playlist-title">
+            { `${playlist.title} (${playlist.track_count})` }
+          </div>
 
-    renderPlaylists() {
-        const { authed, authedPlaylists, dispatch } = this.props;
-        return authed.playlists.map(playlistId => {
-            const playlist = authedPlaylists[playlistId];
+          <div className="nav-playlist-images">
+            { this.renderArtworks(playlist) }
+          </div>
+        </Link>
+      );
+    });
+  }
 
-            return (
-                <Link
-                    className="nav-playlist"
-                    dispatch={ dispatch }
-                    key={ playlistId }
-                    route={{ path: ['me', 'playlists', playlistId] }}
-                >
-                    <div className="nav-playlist-title">
-                        { `${ playlist.title } (${ playlist.track_count })` }
-                    </div>
+  renderArtworks(playlist) {
+    const { songs } = this.props;
+    return playlist.tracks.slice(0, 10).map(songId =>
+      <img
+        className="nav-playlist-image"
+        key={songId}
+        src={getImageUrl(songs[songId].artwork_url)}
+        alt="Song artwork"
+      />
+    );
+  }
 
-                    <div className="nav-playlist-images">
-                        { this.renderArtworks(playlist) }
-                    </div>
-                </Link>
-            )
-        })
-    }
+  login(e) {
+    e.preventDefault();
+    const { dispatch } = this.props;
+    dispatch(loginUser());
+  }
 
-    renderArtworks(playlist) {
-        const { songs } = this.props;
-        return playlist.tracks.slice(0, 10).map(songId =>
+  logout(e) {
+    e.preventDefault();
+    const { dispatch } = this.props;
+    dispatch(logoutUser());
+  }
+
+  renderNavUser() {
+    const { authed } = this.props;
+
+    if (authed.user) {
+      return (
+        <Popover className="nav-user">
+          <div className="nav-user-link">
             <img
-                className="nav-playlist-image"
-                key={ songId }
-                src={ getImageUrl(songs[songId].artwork_url) }
-                alt="Song artwork"
+              className="nav-authed-image"
+              src={getImageUrl(authed.user.avatar_url)}
+              alt="User avatar"
             />
-        )
+            <i className="icon ion-chevron-down" />
+            <i className="icon ion-chevron-up" />
+          </div>
+          <div className="nav-user-popover popover-content">
+            <ul className="nav-user-popover-list">
+              <li className="nav-user-popover-item">
+                <a href="#" onClick={this.logout}>Log Out</a>
+              </li>
+            </ul>
+          </div>
+        </Popover>
+      );
     }
 
-    login(e) {
-        e.preventDefault();
-        const { dispatch } = this.props;
-        dispatch(loginUser());
-    }
+    return (
+      <Popover className="nav-user">
+        <div className="nav-user-link">
+          <i className="icon ion-person" />
+          <i className="icon ion-chevron-down" />
+          <i className="icon ion-chevron-up" />
+        </div>
+        <div className="nav-user-popover popover-content">
+          <ul className="nav-user-popover-list">
+            <li className="nav-user-popover-item">
+              <a className="button orange block" href="#" onClick={this.login}>Sign into SoundCloud</a>
+            </li>
+          </ul>
+        </div>
+      </Popover>
+    );
+  }
 
-    logout(e) {
-        e.preventDefault();
-        const { dispatch } = this.props;
-        dispatch(logoutUser());
-    }
+  render() {
+    const { dispatch } = this.props;
 
-    renderNavUser() {
-        const { authed } = this.props;
+    return (
+      <div className="nav">
+        <div className="container clearfix">
+          <div className="nav-logo">
+            <i className="icon ion-radio-waves" />
+          </div>
 
-        if (authed.user) {
-            return (
-                <Popover className="nav-user">
-                    <div className="nav-user-link">
-                        <img
-                            className="nav-authed-image"
-                            src={ getImageUrl(authed.user.avatar_url) }
-                            alt="User avatar"
-                        />
-                        <i className="icon ion-chevron-down" />
-                        <i className="icon ion-chevron-up" />
-                    </div>
-                    <div className="nav-user-popover popover-content">
-                        <ul className="nav-user-popover-list">
-                            <li className="nav-user-popover-item">
-                                <a href="#" onClick={ this.logout }>Log Out</a>
-                            </li>
-                        </ul>
-                    </div>
-                </Popover>
-            )
-        }
-
-        return (
-            <Popover className="nav-user">
-                <div className="nav-user-link">
-                    <i className="icon ion-person" />
-                    <i className="icon ion-chevron-down" />
-                    <i className="icon ion-chevron-up" />
-                </div>
-                <div className="nav-user-popover popover-content">
-                    <ul className="nav-user-popover-list">
-                        <li className="nav-user-popover-item">
-                            <a className="button orange block" href="#" onClick={ this.login }>Sign into SoundCloud</a>
-                        </li>
-                    </ul>
-                </div>
-            </Popover>
-        )
-    }
-
-    render() {
-        const { dispatch } = this.props;
-
-        return (
-            <div className="nav">
-                <div className="container clearfix">
-                    <div className="nav-logo">
-                        <i className="icon ion-radio-waves"></i>
-                    </div>
-
-                    <div className="nav-nav float-left">
-                        <div className="nav-nav-item">
-                            <Link
-                                className="nav-nav-item-link active"
-                                dispatch={ dispatch }
-                                route={{ path: ['songs'] }}
-                            >
-                                SoundRedux
-                            </Link>
-                        </div>
-                        { this.renderStreamLink() }
-                        { this.renderLikesLink() }
-                        { this.renderPlaylistsPopover() }
-                    </div>
-
-                    <div className="nav-nav float-right">
-                        <div className="nav-nav-item">
-                            <NavSearch dispatch={ dispatch } />
-                        </div>
-                        <div className="nav-nav-item">
-                            { this.renderNavUser() }
-                        </div>
-                    </div>
-                </div>
+          <div className="nav-nav float-left">
+            <div className="nav-nav-item">
+              <Link
+                className="nav-nav-item-link active"
+                dispatch={dispatch}
+                route={{ path: ['songs'] }}
+              >
+                SoundRedux
+              </Link>
             </div>
-        )
-    }
+            { this.renderStreamLink() }
+            { this.renderLikesLink() }
+            { this.renderPlaylistsPopover() }
+          </div>
+
+          <div className="nav-nav float-right">
+            <div className="nav-nav-item">
+              <NavSearch dispatch={dispatch} />
+            </div>
+            <div className="nav-nav-item">
+              { this.renderNavUser() }
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 
 Nav.propTypes = propTypes;
