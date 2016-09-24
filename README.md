@@ -18,7 +18,7 @@ To see user authentication in action in your local environment, install and run 
 
 The first way is to use [Go](https://golang.org/), please [see](https://github.com/andrewngu/sound-redux#install-local-server). But i wrote a simple script to do this.
 
-1. cd server
-2. node authorizationServer.js
+1. `cd server`
+2. `node authorizationServer.js`
 
 Feedback, issues, etc. are more than welcome!
