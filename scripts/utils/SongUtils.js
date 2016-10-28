@@ -25,7 +25,7 @@ export function getImageUrl(s, size = null) {
 
 export function constructUrl(cat) {
   const catArr = cat.split(' - ');
-  let category = catArr[0];
+  let category = catArr[0]; // [1]=time
 
   let result = `${SC_API_URL}/tracks?linked_partitioning=1&client_id=${CLIENT_ID}&limit=50&offset=0`;
 

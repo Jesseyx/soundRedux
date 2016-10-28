@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import classNames from 'classnames';
 
 import Link from './Link';
 
@@ -27,7 +28,10 @@ class Toolbar extends Component {
 
       return (
         <Link
-          className={`toolbar-item toolbar-genre${g === genre ? ' active' : ''}`}
+          className={classNames({
+            'toolbar-item toolbar-genre': true,
+            active: g === genre,
+          })}
           dispatch={dispatch}
           route={route}
           key={g}
@@ -53,7 +57,10 @@ class Toolbar extends Component {
 
       return (
         <Link
-          className={`toolbar-time${t === time ? ' active' : ''}`}
+          className={classNames({
+            'toolbar-time': true,
+            active: t === time,
+          })}
           dispatch={dispatch}
           route={route}
           key={t}

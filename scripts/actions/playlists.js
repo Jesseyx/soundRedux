@@ -91,6 +91,7 @@ export function fetchSongsIfNeeded(playlist) {
 function shouldFetchSongs(playlists, playlist) {
   const activePlaylist = playlists[playlist];
 
+  // When logout nextUrl === null, but can have the playlist
   if (!activePlaylist || (!activePlaylist.isFetching && (activePlaylist.nextUrl !== null))) {
     return true;
   }
