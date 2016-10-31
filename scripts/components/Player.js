@@ -293,7 +293,7 @@ class Player extends Component {
       volume: percent,
     });
 
-    // this.audio.volume = percent;
+    this.audio.volume = percent;
   }
 
   handleVolumeMouseUp() {
@@ -306,7 +306,7 @@ class Player extends Component {
     this.setState({
       isSeeking: false,
     // }, () => {
-    //     this.audio.volume = this.state.volume;
+    //   this.audio.volume = this.state.volume;
     });
 
     // fix updating LocalStorage on volume slider mouseup
