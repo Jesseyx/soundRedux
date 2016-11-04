@@ -56,7 +56,7 @@ export function fetchSongs(url, playlist) {
   };
 }
 
-function requestSongs(playlist) {
+export function requestSongs(playlist) {
   return {
     type: types.REQUEST_SONGS,
     playlist,

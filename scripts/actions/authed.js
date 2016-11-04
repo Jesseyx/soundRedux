@@ -2,7 +2,7 @@ import SC from 'soundcloud';
 import Cookies from 'js-cookie';
 
 import { normalize, arrayOf } from 'normalizr';
-import { fetchSongs, receiveSongs } from './playlists';
+import { fetchSongs, requestSongs, receiveSongs } from './playlists';
 import * as types from '../constants/ActionTypes';
 import { CLIENT_ID } from '../constants/Config';
 import { AUTHED_PLAYLIST_SUFFIX } from '../constants/PlaylistConstants';
@@ -134,28 +134,33 @@ function receiveNewStreamSongs(futureUrl, entities, songs) {
 }
 
 function fetchLikes(accessToken) {
-  return dispatch => fetch(`${SC_API_URL}/me/favorites?oauth_token=${accessToken}`)
-    .then(response => response.json())
-    .then((json) => {
-      console.log('*********************** fetchLinks ***********************');
-      console.log(json);
-      const songs = json.filter(song => song.streamable);
-      const normalized = normalize(songs, arrayOf(songSchema));
-      console.log('*********************** fetchLinks Normailizr ***********************');
-      console.log(normalized);
-      const likes = normalized.result
-        .reduce((obj, songId) => Object.assign({}, obj, { [songId]: 1 }), {});
-      // 将 likes 保存到 authed 中
-      dispatch(receiveLikes(likes));
-      // 将 songs 列表保存到 playlists 中
-      dispatch(receiveSongs(
-        normalized.entities,
-        normalized.result,
-        `likes${AUTHED_PLAYLIST_SUFFIX}`,
-        null,
-      ));
-    })
-    .catch((err) => { throw err; });
+  return (dispatch) => {
+    const playlist = `likes${AUTHED_PLAYLIST_SUFFIX}`;
+    dispatch(requestSongs(playlist));
+
+    return fetch(`${SC_API_URL}/me/favorites?oauth_token=${accessToken}`)
+      .then(response => response.json())
+      .then((json) => {
+        console.log('*********************** fetchLinks ***********************');
+        console.log(json);
+        const songs = json.filter(song => song.streamable);
+        const normalized = normalize(songs, arrayOf(songSchema));
+        console.log('*********************** fetchLinks Normailizr ***********************');
+        console.log(normalized);
+        const likes = normalized.result
+          .reduce((obj, songId) => Object.assign({}, obj, { [songId]: 1 }), {});
+        // 将 likes 保存到 authed 中
+        dispatch(receiveLikes(likes));
+        // 将 songs 列表保存到 playlists 中
+        dispatch(receiveSongs(
+          normalized.entities,
+          normalized.result,
+          playlist,
+          null,
+        ));
+      })
+      .catch((err) => { throw err; });
+  }
 }
 
 function receiveLikes(likes) {
@@ -275,6 +280,7 @@ export function toggleLike(songId) {
     if (!(songId in likes)) {
       // 收藏列表中无该 id, 添加到本地状态中，这里是添加到 playlists 中
       dispatch(appendLike(songId));
+      // if is playing likes playlist now
       if (currentSongIndex !== null
         && selectedPlaylists[selectedPlaylists.length - 1] === `likes${AUTHED_PLAYLIST_SUFFIX}`) {
         dispatch(changePlayingSong(currentSongIndex + 1));
