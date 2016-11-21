@@ -39,7 +39,7 @@ class Song extends Component {
   componentWillReceiveProps(nextProps) {
     const { dispatch, songId } = this.props;
     if (nextProps.songId !== songId) {
-      dispatch(fetchSongIfNeeded());
+      dispatch(fetchSongIfNeeded(nextProps.songId));
     }
   }
 
@@ -148,51 +148,50 @@ class Song extends Component {
               >
                 <div className="song-main">
                   <div
-                    className="song__image"
+                    className="song-image"
                     style={{ backgroundImage: `url(${image})` }}
                   >
                     { this.renderTogglePlayButton() }
                   </div>
-                  <div className="song__info__wrap">
-                    <div className="song__info">
-                      <div className="song-title">
-                        { song.title }
-                      </div>
 
-                      <div className="song-user">
-                        <div
-                          className="song-user-image"
-                          style={{ backgroundImage: `url(${getImageUrl(user.avatar_url)})` }}
-                        />
-                        <Link
-                          className="song-username"
-                          dispatch={dispatch}
-                          route={{ path: ['users', user.id] }}
-                        >
-                          { user.username }
-                        </Link>
-                      </div>
+                  <div className="song-info">
+                    <div className="song-title">
+                      { song.title }
+                    </div>
 
-                      <div className="song-stats">
-                        <SongHeartCount
-                          authed={authed}
-                          count={song.likes_count ? song.likes_count : song.favoritings_count}
-                          dispatch={dispatch}
-                          songId={songId}
-                        />
-                        <div className="song-stat">
-                          <i className="icon ion-play" />
-                          <span>{ addCommas(song.playback_count) }</span>
-                        </div>
-                        <div className="song-stat">
-                          <i className="icon ion-chatbubble" />
-                          <span>{ addCommas(song.comment_count) }</span>
-                        </div>
-                      </div>
+                    <div className="song-user">
+                      <div
+                        className="song-user-image"
+                        style={{ backgroundImage: `url(${getImageUrl(user.avatar_url)})` }}
+                      />
+                      <Link
+                        className="song-username"
+                        dispatch={dispatch}
+                        route={{ path: ['users', user.id] }}
+                      >
+                        { user.username }
+                      </Link>
+                    </div>
 
-                      <div className="song-description">
-                        { song.description }
+                    <div className="song-stats">
+                      <SongHeartCount
+                        authed={authed}
+                        count={song.likes_count ? song.likes_count : song.favoritings_count}
+                        dispatch={dispatch}
+                        songId={songId}
+                      />
+                      <div className="song-stat">
+                        <i className="icon ion-play" />
+                        <span>{ addCommas(song.playback_count) }</span>
                       </div>
+                      <div className="song-stat">
+                        <i className="icon ion-chatbubble" />
+                        <span>{ addCommas(song.comment_count) }</span>
+                      </div>
+                    </div>
+
+                    <div className="song-description">
+                      { song.description }
                     </div>
                   </div>
 

@@ -59,9 +59,9 @@ class Comments extends Component {
     if (isActive && timedComments) {
       return comments
         .slice()
-        .filter((song) => {
-          const songTime = song.timestamp / 1000;
-          return songTime >= currentTime && songTime < (currentTime + COMMENTS_REFRESH_RATE);
+        .filter((comment) => {
+          const commentTime = comment.timestamp / 1000;
+          return commentTime >= currentTime && commentTime < (currentTime + COMMENTS_REFRESH_RATE);
         })
         .sort((a, b) => a.timestamp - b.timestamp)
         .map((comment, i) => <Comment comment={comment} i={i} key={comment.id} />);

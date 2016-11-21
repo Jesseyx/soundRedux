@@ -26,17 +26,13 @@
   padding: 10px;
 }
 
-.song-list-item__info__wrap {
+.song-list-item-info {
+  max-width: 487px;
   margin: 10px 20px 0 0;
   flex: 1;
-  overflow: hidden;
 }
 
-.song-list-item__info {
-  width: 100%;
-}
-
-.song-list-item__image {
+.song-list-item-image {
   width: 60px;
   height: 60px;
   margin: 10px 20px 10px 10px;

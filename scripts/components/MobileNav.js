@@ -30,8 +30,8 @@ class MobileNav extends Component {
   }
 
   toggleGenreMenuOpen(e) {
+    e.preventDefault();
     if (!this.state.isUserMenuOpen) {
-      e.preventDefault();
       this.setState({ isGenreMenuOpen: !this.state.isGenreMenuOpen });
     }
   }
@@ -71,6 +71,7 @@ class MobileNav extends Component {
   getPlaylistDetails() {
     const { authed, authedPlaylists } = this.props;
     const playlistNames = [];
+    // no use
     let playlistIds = [];
     let playlistDetails = {};
 
@@ -134,6 +135,7 @@ class MobileNav extends Component {
       <Motion
         style={{ height: spring(isUserMenuOpen ? (4) * 50 : 0, presets.stiff) }}
       >
+
         {
           ({ height }) =>
             <div

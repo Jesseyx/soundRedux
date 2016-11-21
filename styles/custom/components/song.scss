@@ -10,7 +10,7 @@
   display: flex;
 }
 
-.song__image {
+.song-image {
   width: 120px;
   height: 120px;
   margin: 10px 20px 10px 10px;
@@ -24,15 +24,10 @@
   }
 }
 
-.song__info__wrap {
+.song-info {
+  max-width: 427px;
   margin: 10px 20px 0 0;
   flex: 1;
-  overflow: hidden;
-}
-
-.song__info {
-  width: 100%;
-  overflow: hidden;
 }
 
 .song-title {
@@ -73,7 +68,7 @@
 
 .song-stat {
   display: inline-block;
-  width: 80px;
+  width: 82px;
 
   & + .song-stat {
     margin-left: 20px;

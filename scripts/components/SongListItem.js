@@ -46,53 +46,50 @@ class SongListItem extends Component {
         })}
       >
         <div
-          className="song-list-item__image"
+          className="song-list-item-image"
           style={{ backgroundImage: `url(${image})` }}
-          onClick={playSong}
         >
           { this.renderTogglePlayButton() }
         </div>
-        <div className="song-list-item__info__wrap">
-          <div className="song-list-item__info">
-            <Link
-              className="song-list-item-title"
-              dispatch={dispatch}
-              route={{ path: ['songs', song.id] }}
-            >
-              { song.title }
-            </Link>
+        <div className="song-list-item-info">
+          <Link
+            className="song-list-item-title"
+            dispatch={dispatch}
+            route={{ path: ['songs', song.id] }}
+          >
+            { song.title }
+          </Link>
 
-            <div className="song-list-item-info-extra">
-              <div className="song-list-item__user">
-                <div
-                  className="song-list-item-user-image"
-                  style={{ backgroundImage: `url(${getImageUrl(user.avatar_url)})` }}
-                />
+          <div className="song-list-item-info-extra">
+            <div className="song-list-item__user">
+              <div
+                className="song-list-item-user-image"
+                style={{ backgroundImage: `url(${getImageUrl(user.avatar_url)})` }}
+              />
 
-                <Link
-                  className="song-list-item-username"
-                  dispatch={dispatch}
-                  route={{ path: ['users', song.user_id] }}
-                >
-                  { user.username }
-                </Link>
+              <Link
+                className="song-list-item-username"
+                dispatch={dispatch}
+                route={{ path: ['users', song.user_id] }}
+              >
+                { user.username }
+              </Link>
+            </div>
+
+            <div className="song-list-item-stats">
+              <SongHeartCount
+                authed={authed}
+                count={song.favoritings_count}
+                dispatch={dispatch}
+                songId={song.id}
+              />
+              <div className="song-list-item-stat">
+                <i className="icon ion-play" />
+                <span>{ addCommas(song.playback_count) }</span>
               </div>
-
-              <div className="song-list-item-stats">
-                <SongHeartCount
-                  authed={authed}
-                  count={song.favoritings_count}
-                  dispatch={dispatch}
-                  songId={song.id}
-                />
-                <div className="song-list-item-stat">
-                  <i className="icon ion-play" />
-                  <span>{ addCommas(song.playback_count) }</span>
-                </div>
-                <div className="song-list-item-stat">
-                  <i className="icon ion-chatbubble" />
-                  <span>{ addCommas(song.comment_count) }</span>
-                </div>
+              <div className="song-list-item-stat">
+                <i className="icon ion-chatbubble" />
+                <span>{ addCommas(song.comment_count) }</span>
               </div>
             </div>
           </div>
