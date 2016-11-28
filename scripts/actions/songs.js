@@ -105,6 +105,6 @@ function receiveSongComments(songId, comments) {
   const entities = { songs: { [songId]: { comments } } };
   return {
     type: types.RECEIVE_SONG_COMMENTS,
-    entities, 
+    entities,
   };
 }

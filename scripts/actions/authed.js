@@ -160,7 +160,7 @@ function fetchLikes(accessToken) {
         ));
       })
       .catch((err) => { throw err; });
-  }
+  };
 }
 
 function receiveLikes(likes) {

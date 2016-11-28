@@ -204,7 +204,7 @@ class MobileNav extends Component {
             href="#"
             onClick={this.logout}
           >
-            { "Log Out" }
+            { 'Log Out' }
           </a>
         </div>
       );
@@ -217,7 +217,7 @@ class MobileNav extends Component {
           href="#"
           onClick={this.login}
         >
-          { "Sign into SoundCloud" }
+          { 'Sign into SoundCloud' }
           <i className="icon ion-person" />
         </a>
       </div>
