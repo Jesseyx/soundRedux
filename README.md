@@ -8,17 +8,28 @@ See it in action at https://soundredux.io
 
 Uses [normalizr](https://github.com/gaearon/normalizr)
 
-1. `npm install`
-2. `npm run start`
-3. visit `http://localhost:8080`
+### Build Setup
 
-### Install local server
+``` bash
+# install dependencies
+npm install
+
+# serve with hot reload at localhost:8080
+npm run dev
+
+# build for production with minification
+npm run build
+```
+
+### Local authentication server setup
 
 To see user authentication in action in your local environment, install and run the server.
 
 The first way is to use [Go](https://golang.org/), please [see](https://github.com/andrewngu/sound-redux#install-local-server). But i wrote a simple script to do this.
 
-1. `cd server`
-2. `node authorizationServer.js`
+```
+# run a proxy server for authentication
+npm run auth
+```
 
 Feedback, issues, etc. are more than welcome!

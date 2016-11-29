@@ -1,5 +1,5 @@
-/node_modules/
 /.idea/
-/server/public/css/
-/server/public/js/
-eslint-result.json
+.DS_Store
+node_modules/
+dist/
+npm-debug.log
