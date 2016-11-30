@@ -9,7 +9,7 @@ import { fetchSongsIfNeeded } from '../actions/playlists';
 
 const propTypes = {
   authed: PropTypes.object.isRequired,
-  authedPlaylists: PropTypes.object.isRequired,
+  playlistEntities: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   height: PropTypes.number.isRequired,
   playingSongId: PropTypes.number,
@@ -21,7 +21,7 @@ const propTypes = {
 
 class Me extends Component {
   getPlaylist() {
-    const { authedPlaylists, route } = this.props;
+    const { playlistEntities, route } = this.props;
     const { path } = route;
 
     switch (path[1]) {
@@ -30,10 +30,10 @@ class Me extends Component {
       case 'likes':
         return 'likes';
       case 'playlists': {
-        if (path.length < 3 || !(path[2] in authedPlaylists)) {
+        if (path.length < 3 || !(path[2] in playlistEntities)) {
           return 'playlists';
         }
-        const playlist = authedPlaylists[path[2]];
+        const playlist = playlistEntities[path[2]];
         return playlist.title;
       }
       default:

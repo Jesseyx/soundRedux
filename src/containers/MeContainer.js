@@ -32,7 +32,7 @@ function mapStateToProps(state) {
 
   return {
     authed,
-    authedPlaylists: entities.playlists,
+    playlistEntities: entities.playlists,
     height,
     isMobile,
     player,

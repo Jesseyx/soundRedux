@@ -27,7 +27,7 @@ function mapStateToProps(state) {
 
   return {
     authed,
-    authedPlaylists: playlists,
+    playlistEntities: playlists,
     isMobile,
     navigator,
     songs,

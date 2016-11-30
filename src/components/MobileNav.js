@@ -9,7 +9,7 @@ import { getImageUrl } from '../utils/SongUtils';
 
 const propTypes = {
   authed: PropTypes.object.isRequired,
-  authedPlaylists: PropTypes.object.isRequired,
+  playlistEntities: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   navigator: PropTypes.object.isRequired,
 };
@@ -69,7 +69,7 @@ class MobileNav extends Component {
   }
 
   getPlaylistDetails() {
-    const { authed, authedPlaylists } = this.props;
+    const { authed, playlistEntities } = this.props;
     const playlistNames = [];
     // no use
     let playlistIds = [];
@@ -81,7 +81,7 @@ class MobileNav extends Component {
 
     if (playlistIds) {
       for (const n of playlistIds) {
-        playlistNames.push(`PLAYLIST: ${authedPlaylists[n].title}`);
+        playlistNames.push(`PLAYLIST: ${playlistEntities[n].title}`);
       }
     }
 

@@ -10,7 +10,7 @@ import { getImageUrl } from '../utils/SongUtils';
 
 const propTypes = {
   authed: PropTypes.object.isRequired,
-  authedPlaylists: PropTypes.object.isRequired,
+  playlistEntities: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   navigator: PropTypes.object.isRequired,
   songs: PropTypes.object.isRequired,
@@ -104,22 +104,22 @@ class Nav extends Component {
   }
 
   getPlaylist() {
-    const { authedPlaylists, navigator } = this.props;
+    const { playlistEntities, navigator } = this.props;
     const { path } = navigator.route;
 
     if (path[0] === 'me'
     && path[1] === 'playlists'
-    && path[2] in authedPlaylists) {
-      return authedPlaylists[path[2]].title;
+    && path[2] in playlistEntities) {
+      return playlistEntities[path[2]].title;
     }
 
     return 'playlists';
   }
 
   renderPlaylists() {
-    const { authed, authedPlaylists, dispatch } = this.props;
+    const { authed, playlistEntities, dispatch } = this.props;
     return authed.playlists.map((playlistId) => {
-      const playlist = authedPlaylists[playlistId];
+      const playlist = playlistEntities[playlistId];
 
       return (
         <Link
